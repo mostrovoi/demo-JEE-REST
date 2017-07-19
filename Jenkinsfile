@@ -23,8 +23,7 @@ node {
            
             mvnHome = tool 'M3'
         } catch (Exception e) {
-           // throw new hudson.AbortException("S'ha produït una excepció als SETTINGS INICIALS \n " + e)
-        	println("Error a definicions inicials")
+           error("S'ha produït una excepció als SETTINGS INICIALS \n " + e)
         }
         
         // Inici CHECKOUT
@@ -51,8 +50,7 @@ node {
                 //deployUtilities.checkOutValidations(false)
                 
             } catch (Exception e) {
-                //throw new hudson.AbortException("S'ha produït una excepció al STAGE CHECKOUT \n " + e)
-            	println("Error al checkout"+e)
+               error("S'ha produït una excepció al STAGE CHECKOUT \n " + e)
             }
         }
         // Fi CHECKOUT    

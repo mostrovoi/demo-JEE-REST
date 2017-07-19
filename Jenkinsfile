@@ -1,3 +1,5 @@
+//S'ha de definir la tool Maven amb nom M3 i path que correspongui
+
 def mvnHome
 env.TIPUS_DESPLEGAMENT
 env.WORKSPACE
@@ -13,8 +15,8 @@ node {
     try{
         try {
                     
-            env.TITOL = "Petició de desplegament"
-            env.OBSERVACIONS = "Observacions de petició de proves"
+          //  env.TITOL = "Petició de desplegament"
+          //  env.OBSERVACIONS = "Observacions de petició de proves"
         
             // Global definitions
            // deployUtilities = load "${env.pathTasquesAnt}" + 'deployUtilitiesV2.groovy'

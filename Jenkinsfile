@@ -1,15 +1,15 @@
 //S'ha de definir la tool Maven amb nom M3 i path que correspongui
 
 def mvnHome
+def sonarHome
 env.TIPUS_DESPLEGAMENT
 env.WORKSPACE
 env.TITOL
 env.OBSERVACIONS
 env.BUILD_USER
 env.VERSIO
-def resultado
-def hashPropietats
 def repositoryPath = "https://github.com/mostrovoi/demo-canigo.git"
+
 
 node {
     try{
@@ -36,9 +36,8 @@ node {
             {
                 git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 
             }
-                 
-                //env.VERSIO = deployUtilities.getVersio()
-                //deployUtilities.checkOutValidations(false)
+			//env.VERSIO = deployUtilities.getVersio()
+			//deployUtilities.checkOutValidations(false)
         }
         // Fi CHECKOUT    
         
@@ -53,14 +52,19 @@ node {
         
         // Inici Unit TEST
         stage ('Unit Test') {
-			sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore"
+			sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore -f treball/pom.xml"
         }
         // Fi Unit TEST
         
         // Inici ACE
         stage ('Anàlisi de codi estàtic') {
             // TODO: Integrar amb eina anàlisi statics
-             println("SonarQube aqui" )
+             println("SonarQube" )
+               // requires SonarQube Scanner 2.8+
+    	 	sonarHome = tool 'SonarQube';
+    		withSonarQubeEnv('SonarQube Server') {
+      			sh "${sonarHome}/bin/sonar-scanner"
+   			}
         }
         // Fi ACE
         

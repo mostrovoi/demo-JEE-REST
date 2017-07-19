@@ -42,8 +42,8 @@ node {
                 //env.WORKSPACE = pwd()
                 //dir('treball')
                 //{
-                //    git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 
-                		checkout scm: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: $repositoryPath]]]                
+                    git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 
+                //		checkout scm: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: $repositoryPath]]]                
                        
                 //}
                  

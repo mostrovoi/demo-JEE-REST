@@ -39,12 +39,12 @@ node {
 
               
                 env.WORKSPACE = pwd()
-                dir('treball')
-                {
+                //dir('treball')
+                //{
                 //    git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 
                 		checkout scm: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: $repositoryPath]]]                
                        
-                }
+                //}
 
  
 
@@ -62,7 +62,7 @@ node {
         // Inici BUILD
         stage ('Build') {
             try {
-                sh "${mvnHome}/bin/mvn package -Dmaven.test.skip=true -f treball/pom.xml"
+                sh "${mvnHome}/bin/mvn package -Dmaven.test.skip=true"
                 env.ENTORN = "INT"
                 //  step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
   				//step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
@@ -75,7 +75,7 @@ node {
         // Inici Unit TEST
         stage ('Unit Test') {
             try {            
-				 sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore t-f reball/pom.xml"
+				 sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore"
             } catch (Exception e) {
                 throw new hudson.AbortException("S'ha produït una excepció al STAGE TEST \n " + e)
             }

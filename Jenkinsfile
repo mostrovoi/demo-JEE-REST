@@ -19,7 +19,7 @@ node {
             env.OBSERVACIONS = "Observacions de petició de proves"
         
             // Global definitions
-           // deployUtilities = load "${env.pathTasquesAnt}" + 'deployUtilitiesV2.groovy'
+            // deployUtilities = load "${env.pathTasquesAnt}" + 'deployUtilitiesV2.groovy'
            
             mvnHome = tool 'M3'
         } catch (Exception e) {
@@ -45,16 +45,13 @@ node {
                 		checkout scm: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: $repositoryPath]]]                
                        
                 //}
-
- 
-
-                              
+                 
                 //env.VERSIO = deployUtilities.getVersio()
                 //deployUtilities.checkOutValidations(false)
                 
             } catch (Exception e) {
                 //throw new hudson.AbortException("S'ha produït una excepció al STAGE CHECKOUT \n " + e)
-            	println("Error al checkout")
+            	println("Error al checkout"+e)
             }
         }
         // Fi CHECKOUT    

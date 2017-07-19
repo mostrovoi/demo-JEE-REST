@@ -224,9 +224,9 @@ node {
                     // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
                 ])
                     
-                node {
-                    indicadorsFile.desaTempsCicleFi("${CODI_APLICACIO}", "${NOM_APLICACIO}", "${env.BUILD_NUMBER}")
-                }
+              //  node {
+              //      indicadorsFile.desaTempsCicleFi("${CODI_APLICACIO}", "${NOM_APLICACIO}", "${env.BUILD_NUMBER}")
+              //  }
             } catch (Exception e) {
                 throw new hudson.AbortException("S'ha produït una excepció al STAGE SMOKE TEST \n " + e)
             }

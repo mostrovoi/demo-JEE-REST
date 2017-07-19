@@ -9,7 +9,7 @@ env.BUILD_USER
 env.VERSIO
 def resultado
 def hashPropietats
-def repositoryPath 
+def repositoryPath = "https://github.com/mostrovoi/demo-canigo.git"
 
 node {
     try{
@@ -29,7 +29,6 @@ node {
         // Inici CHECKOUT
         stage ('Checkout') {
             try {
-                repositoryPath = "https://github.com/mostrovoi/demo-canigo.git"
                 //node {
                     // Global definitions
                   //  println("CODI: ${CODI_APLICACIO} , NOM: ${NOM_APLICACIO} , BUILD: ${env.BUILD_NUMBER}" )

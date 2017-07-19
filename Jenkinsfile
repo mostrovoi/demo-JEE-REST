@@ -13,68 +13,47 @@ def repositoryPath = "https://github.com/mostrovoi/demo-canigo.git"
 
 node {
     try{
-        try {
                     
-            env.TITOL = "Petició de desplegament"
-            env.OBSERVACIONS = "Observacions de petició de proves"
-        
-            // Global definitions
-            // deployUtilities = load "${env.pathTasquesAnt}" + 'deployUtilitiesV2.groovy'
-           
-            mvnHome = tool 'M3'
-        } catch (Exception e) {
-           error("S'ha produït una excepció als SETTINGS INICIALS \n " + e)
-        }
+        env.TITOL = "Petició de desplegament"
+        env.OBSERVACIONS = "Observacions de petició de proves"
+    	env.STAGE_NAME = "Settings inicials"
+        // Global definitions
+        // deployUtilities = load "${env.pathTasquesAnt}" + 'deployUtilitiesV2.groovy'
+       
+        mvnHome = tool 'M3'
+
         
         // Inici CHECKOUT
         stage ('Checkout') {
-            try {
-                //node {
-                    // Global definitions
-                  //  println("CODI: ${CODI_APLICACIO} , NOM: ${NOM_APLICACIO} , BUILD: ${env.BUILD_NUMBER}" )
-                    // Load properties File.
-                   // hashPropietats = readProperties file: "${env.APP_FILE_PROPERTIES}"
-                //}
-
-              
-                //env.WORKSPACE = pwd()
-                //dir('treball')
-                //{
-                    git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 
-                //		checkout scm: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: $repositoryPath]]]                
-                       
-                //}
+            //node {
+                // Global definitions
+              //  println("CODI: ${CODI_APLICACIO} , NOM: ${NOM_APLICACIO} , BUILD: ${env.BUILD_NUMBER}" )
+                // Load properties File.
+               // hashPropietats = readProperties file: "${env.APP_FILE_PROPERTIES}"
+            //}           
+            //env.WORKSPACE = pwd()
+            dir('treball')
+            {
+                git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 
+            }
                  
                 //env.VERSIO = deployUtilities.getVersio()
                 //deployUtilities.checkOutValidations(false)
-                
-            } catch (Exception e) {
-               error("S'ha produït una excepció al STAGE CHECKOUT \n " + e)
-            }
         }
         // Fi CHECKOUT    
         
         // Inici BUILD
         stage ('Build') {
-            try {
-                sh "${mvnHome}/bin/mvn package -Dmaven.test.skip=true"
-                env.ENTORN = "INT"
-                //  step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
-  				//step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
-            } catch (Exception e) {
-                throw new hudson.AbortException("S'ha produït una excepció al STAGE BUILD \n " + e)
-            }
+            sh "${mvnHome}/bin/mvn package -Dmaven.test.skip=true -f treball/pom.xml"
+            env.ENTORN = "INT"
+            //step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
+			//step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
         }
         // Fi BUILD
         
         // Inici Unit TEST
         stage ('Unit Test') {
-            try {            
-				 sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore"
-            } catch (Exception e) {
-                throw new hudson.AbortException("S'ha produït una excepció al STAGE TEST \n " + e)
-            }
-        
+			sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore"
         }
         // Fi Unit TEST
         
@@ -86,13 +65,9 @@ node {
         // Fi ACE
         
         // Inici Commit TEST
-        stage ('Commit Test') {
-            try {            
-                //TODO: Definir com es realitzaran aquests test i si la seva execució es controlarà per polítiques
-                println("Commit test aqui" )
-            } catch (Exception e) {
-                throw new hudson.AbortException("S'ha produït una excepció al STAGE COMMIT TEST \n " + e)
-            }
+        stage ('Commit Test') {          
+            //TODO: Definir com es realitzaran aquests test i si la seva execució es controlarà per polítiques
+            println("Commit test aqui" )
         }
         // Fi Commit TEST
         
@@ -111,51 +86,38 @@ node {
         
         // Inici INT    
         stage ('INT') {
-            try{
-                println("-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------")
-           
-    
-                println("-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------")
-            } catch (Exception e) {
-                throw new hudson.AbortException("S'ha produït una excepció al STAGE INT \n " + e)
-            }
+            println("-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------")
+            println("-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------")
         }
         // Fi INT
         
         // Inici Smoke TEST
-        stage ('Smoke Test') {
+        stage ('Smoke Test INT') {
         
         }
         // Fi Smoke TEST
-    
-        
-       
+          
         // Inici PRE
         stage ('PRE') {
-            try {
-                println("-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------")
-                //def userInput = input(
-                //    id: 'userInput', message: 'Efectuar petició desplegament a PRE?', parameters: [
-        //                [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
-                //    ])
-                //env.ENTORN = "PRE"
-                //env.TIPUS_DESPLEGAMENT = resultadoPre // -> AUT
-                
-                
-                //deployUtilities.sendArtifactsToCPDJob(hashPropietats)
-                //deployUtilities.sicPeticioDeplegament(hashPropietats)
-                //deployUtilities.deleteUploadFile()
-                
-                
-                 println("-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------")
-            } catch (Exception e) {
-                throw new hudson.AbortException("S'ha produït una excepció al STAGE PRE \n " + e)
-            }
+       		 println("-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------")
+            //def userInput = input(
+            //    id: 'userInput', message: 'Efectuar petició desplegament a PRE?', parameters: [
+    		//  [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
+            //    ])
+            //env.ENTORN = "PRE"
+            //env.TIPUS_DESPLEGAMENT = resultadoPre // -> AUT
+            
+            
+            //deployUtilities.sendArtifactsToCPDJob(hashPropietats)
+            //deployUtilities.sicPeticioDeplegament(hashPropietats)
+            //deployUtilities.deleteUploadFile()
+             println("-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------")
         }
         // Fi PRE
         
         // Inici Smoke TEST
-        stage ('Smoke Test') {
+        stage ('Smoke Test PRE') {
+        	println("Smoke Test de PRE")
          //   def userInput2 = input(
           //      id: 'userInput2', message: 'Continuar quan es rebi confirmació de desplegament a PRE.', parameters: [
                 // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
@@ -164,79 +126,70 @@ node {
         // Fi Smoke TEST
         
         // Inici Acceptance TEST
-        stage ('Acceptance Test') {
-        
+        stage ('Acceptance Test PRE') {
+           println("Acceptance Test PRE")
         }
         // Fi Acceptancy TEST
         
         // Inici Exploratory TEST
-        stage ('Exploratory Test') {
-        
+        stage ('Exploratory Test PRE') {
+        	println("Exploratory Test PRE")
         }
         // Fi Exploratory TEST
         
         
          // Inici Generació TAG DEFINITIU
         stage ('Generació Tag DEFINITIU') {
-           // try {
-               /* def userInput = input(
-                    id: 'userInput', message: 'Generar TAG al Gitlab', parameters: [
-                    ])*/
-                
-             //   node {        
-             //       indicadorsFile.desaTempsGeneracioTag("${CODI_APLICACIO}", "${NOM_APLICACIO}", "${env.BUILD_NUMBER}")
-              //  }
-          //  } catch (Exception e) {
-          //      throw new hudson.AbortException("S'ha produït una excepció al STAGE TAG DEFINITIU \n " + e)
-           // }
-        }
-        // Fi Generació TAG DEFINITIU
+        	println("Generació Tag DEFINITIU")
+			// try {
+			/* def userInput = input(
+			id: 'userInput', message: 'Generar TAG al Gitlab', parameters: [
+			])*/
+
+			//   node {        
+			//       indicadorsFile.desaTempsGeneracioTag("${CODI_APLICACIO}", "${NOM_APLICACIO}", "${env.BUILD_NUMBER}")
+			//  }
+			//  } catch (Exception e) {
+			//      throw new hudson.AbortException("S'ha produït una excepció al STAGE TAG DEFINITIU \n " + e)
+			// }
+			}
+			// Fi Generació TAG DEFINITIU
         
         // Inici PRO
         stage ('PRO') {
-           // try {
-                println("-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------")
-           //      def userInput = input(
-            //        id: 'userInput', message: 'Efectuar desplegament a PRO?', parameters: [
-        //                [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
-            //        ])
-                    
-            //    env.ENTORN = "PRO"
-            //    env.TIPUS_DESPLEGAMENT = resultadoPre // -> AUT
-                
-                
-            //    deployUtilities.sendArtifactsToCPDJob(hashPropietats)
-             //   deployUtilities.sicPeticioDeplegament(hashPropietats)
-             //   deployUtilities.deleteUploadFile()
-                
-                 println("-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------")
-          //  } catch (Exception e) {
-          //      throw new hudson.AbortException("S'ha produït una excepció al STAGE PRO \n " + e)
-          //  }
+			println("-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------")
+			//      def userInput = input(
+			//        id: 'userInput', message: 'Efectuar desplegament a PRO?', parameters: [
+			//                [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
+			//        ])
+
+			//    env.ENTORN = "PRO"
+			//    env.TIPUS_DESPLEGAMENT = resultadoPre // -> AUT
+
+
+			//    deployUtilities.sendArtifactsToCPDJob(hashPropietats)
+			//   deployUtilities.sicPeticioDeplegament(hashPropietats)
+			//   deployUtilities.deleteUploadFile()
+			println("-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------")
         }
         // Fi PRO
         
         // Inici Smoke TEST
         stage ('Smoke Test') {
-            try {
-                def userInput3 = input(
-                    id: 'userInput3', message: 'Continuar quan es rebi confirmació de desplegament a PRO.', parameters: [
-                    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
-                ])
-                    
-              //  node {
-              //      indicadorsFile.desaTempsCicleFi("${CODI_APLICACIO}", "${NOM_APLICACIO}", "${env.BUILD_NUMBER}")
-              //  }
-            } catch (Exception e) {
-                throw new hudson.AbortException("S'ha produït una excepció al STAGE SMOKE TEST \n " + e)
-            }
+			def userInput3 = input(
+			    id: 'userInput3', message: 'Continuar quan es rebi confirmació de desplegament a PRO.', parameters: [
+			    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
+			])    
+		//  node {
+		//      indicadorsFile.desaTempsCicleFi("${CODI_APLICACIO}", "${NOM_APLICACIO}", "${env.BUILD_NUMBER}")
+		//  }
         }
         // Fi Smoke TEST
 
     } catch (Exception e) {
     	println("-----------------> EXCEPCION <-----------------")
-    	println (e)
+    	error("S'ha produït una excepció al STAGE ${env.STAGE_NAME} \n " + e)
     	//currentBuild.result = 'FAILURE'
-    	//emailext subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - FAILURE!", to: "mymail@mail.com",body: "${e.message}"
+    	emailext subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - FAILURE!", to: "oscar.perez_gov.ext@gencat.cat",body: "${e.message}"
     }
 }

@@ -188,9 +188,9 @@ node {
              //   node {        
              //       indicadorsFile.desaTempsGeneracioTag("${CODI_APLICACIO}", "${NOM_APLICACIO}", "${env.BUILD_NUMBER}")
               //  }
-            } catch (Exception e) {
-                throw new hudson.AbortException("S'ha produït una excepció al STAGE TAG DEFINITIU \n " + e)
-            }
+          //  } catch (Exception e) {
+          //      throw new hudson.AbortException("S'ha produït una excepció al STAGE TAG DEFINITIU \n " + e)
+           // }
         }
         // Fi Generació TAG DEFINITIU
         

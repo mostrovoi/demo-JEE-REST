@@ -30,12 +30,12 @@ node {
         // Inici CHECKOUT
         stage ('Checkout') {
             try {
-                node {
+                //node {
                     // Global definitions
-                    println("CODI: ${CODI_APLICACIO} , NOM: ${NOM_APLICACIO} , BUILD: ${env.BUILD_NUMBER}" )
+                  //  println("CODI: ${CODI_APLICACIO} , NOM: ${NOM_APLICACIO} , BUILD: ${env.BUILD_NUMBER}" )
                     // Load properties File.
                    // hashPropietats = readProperties file: "${env.APP_FILE_PROPERTIES}"
-                }
+                //}
 
               
                 //env.WORKSPACE = pwd()

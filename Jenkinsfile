@@ -212,9 +212,9 @@ node {
              //   deployUtilities.deleteUploadFile()
                 
                  println("-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------")
-            } catch (Exception e) {
-                throw new hudson.AbortException("S'ha produït una excepció al STAGE PRO \n " + e)
-            }
+          //  } catch (Exception e) {
+          //      throw new hudson.AbortException("S'ha produït una excepció al STAGE PRO \n " + e)
+          //  }
         }
         // Fi PRO
         

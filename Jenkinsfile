@@ -15,8 +15,8 @@ node {
     try{
         try {
                     
-          //  env.TITOL = "Petició de desplegament"
-          //  env.OBSERVACIONS = "Observacions de petició de proves"
+            env.TITOL = "Petició de desplegament"
+            env.OBSERVACIONS = "Observacions de petició de proves"
         
             // Global definitions
            // deployUtilities = load "${env.pathTasquesAnt}" + 'deployUtilitiesV2.groovy'
@@ -42,8 +42,7 @@ node {
                 {
                 //    git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 
                 		checkout scm: [$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: $repositoryPath]]]                
-                        
-
+                       
                 }
 
  
@@ -241,6 +240,6 @@ node {
     	println("-----------------> EXCEPCION <-----------------")
     	println (e)
     	//currentBuild.result = 'FAILURE'
-    	emailext subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - FAILURE!", to: "mymail@mail.com",body: "${e.message}"
+    	//emailext subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - FAILURE!", to: "mymail@mail.com",body: "${e.message}"
     }
 }

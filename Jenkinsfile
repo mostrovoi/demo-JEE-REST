@@ -38,7 +38,7 @@ node {
                 }
 
               
-                env.WORKSPACE = pwd()
+                //env.WORKSPACE = pwd()
                 //dir('treball')
                 //{
                 //    git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 

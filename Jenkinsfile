@@ -19,10 +19,9 @@ node {
     	env.STAGE_NAME = "Settings inicials"
         // Global definitions
         // deployUtilities = load "${env.pathTasquesAnt}" + 'deployUtilitiesV2.groovy'
-       
-        mvnHome = tool 'M3'
+         mvnHome = tool 'M3'
+         sonarQubeScannerHome = tool 'SonarQubeScanner3.0.3';
 
-        
         // Inici CHECKOUT
         stage ('Checkout') {
             //node {
@@ -61,9 +60,11 @@ node {
             // TODO: Integrar amb eina anàlisi statics
              println("SonarQubeServer" )
                // requires SonarQube Scanner 2.8+
-    	 	sonarQubeScannerHome = tool 'SonarQubeScanner3.0.3';
+    	 	
     		withSonarQubeEnv('SonarQubeServer') {
-      			sh "${sonarQubeScannerHome}/bin/sonar-scanner"
+    			//TODO: Figure out how to automatically generate values for projecteKey and sources
+    			//Another options is sonar-project.properties file specific to a project
+      			sh "${sonarQubeScannerHome}/bin/sonar-scanner -Dsonar.projectKey=demo-canigo -Dsonar.sources=src"
    			}
         }
         // Fi ACE

@@ -62,7 +62,7 @@ node {
              println("SonarQube" )
                // requires SonarQube Scanner 2.8+
     	 	sonarQubeScannerHome = tool 'SonarQubeScanner3.0.3';
-    		withSonarQubeEnv('SonarQube Server') {
+    		withSonarQubeEnv('SonarQube') {
       			sh "${sonarQubeScannerHome}/bin/sonar-scanner"
    			}
         }

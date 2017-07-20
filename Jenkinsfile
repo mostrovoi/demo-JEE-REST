@@ -55,7 +55,7 @@ node {
         }
         // Fi Unit TEST
         
-        // Inici ACE
+        // Inici Sonar:ACE
         stage ('Anàlisi de codi estàtic') {
             // TODO: Integrar amb eina anàlisi statics
              println("SonarQubeServer" )
@@ -64,10 +64,10 @@ node {
     		withSonarQubeEnv('SonarQubeServer') {
     			//TODO: Figure out how to automatically generate values for projecteKey and sources
     			//Another options is sonar-project.properties file specific to a project
-      			sh "${sonarQubeScannerHome}/bin/sonar-scanner -Dsonar.projectKey=demo-canigo -Dsonar.sources=src"
+      			sh "${sonarQubeScannerHome}/bin/sonar-scanner -Dsonar.projectKey=dcat.gencat.springbootdemo:springbootdemo -Dsonar.sources=src"
    			}
         }
-        // Fi ACE
+        // Fi Sonar:ACE
         
         // Inici Commit TEST
         stage ('Commit Test') {          

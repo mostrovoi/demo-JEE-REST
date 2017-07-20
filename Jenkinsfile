@@ -46,7 +46,7 @@ node {
     		withSonarQubeEnv('SonarQubeServer') {
     			//TODO: Figure out how to automatically generate values for projecteKey and sources
     			//Another options is sonar-project.properties file specific to a project
-      			sh '${mvnHome}/bin/mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
+      			sh "${mvnHome}/bin/mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar"
    			}
         }
         // Fi Sonar:ACE

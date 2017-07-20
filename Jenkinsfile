@@ -61,9 +61,9 @@ node {
             // TODO: Integrar amb eina anàlisi statics
              println("SonarQube" )
                // requires SonarQube Scanner 2.8+
-    	 	sonarHome = tool 'SonarQube';
+    	 	sonarQubeScannerHome = tool 'SonarQubeScanner3.0.3';
     		withSonarQubeEnv('SonarQube Server') {
-      			sh "${sonarHome}/bin/sonar-scanner"
+      			sh "${sonarQubeScannerHome}/bin/sonar-scanner"
    			}
         }
         // Fi ACE

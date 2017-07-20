@@ -59,10 +59,10 @@ node {
         // Inici ACE
         stage ('Anàlisi de codi estàtic') {
             // TODO: Integrar amb eina anàlisi statics
-             println("SonarQube" )
+             println("SonarQubeServer" )
                // requires SonarQube Scanner 2.8+
     	 	sonarQubeScannerHome = tool 'SonarQubeScanner3.0.3';
-    		withSonarQubeEnv('SonarQube') {
+    		withSonarQubeEnv('SonarQubeServer') {
       			sh "${sonarQubeScannerHome}/bin/sonar-scanner"
    			}
         }

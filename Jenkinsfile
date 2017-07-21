@@ -27,12 +27,12 @@ pipeline {
 	   		}
 	    }
 
-	    stage('Guardar Junits') {
-	    	steps {
-	    		archive '*/target/**/*'
-	    		junit '*/target/surefire-reports/*.xml'
-	    	}
-	    }
+	   // stage('Guardar Junits') {
+	   // 	steps {
+	   // 		archive '*/target/**/*'
+	   // 		junit '*/target/surefire-reports/*.xml'
+	   // 	}
+	    //}
 
         stage ('Anàlisi de codi estàtic') {
         	steps {

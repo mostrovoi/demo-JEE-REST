@@ -6,7 +6,6 @@ pipeline {
 	//}
 	tools {
 		maven 'Maven 3.5.0'
-		jdk 'jdk8'
 	}
 	stages {
 		
@@ -105,16 +104,16 @@ pipeline {
 			    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
 	//		])    
      //   }
-        /*post {
-		    always {
-		      junit '**/target/*.xml' 
-		    }
-		    failure {
-		      echo 'Failed!'
-		    }
-		    success {
-		      echo 'Done!'
-		    }
-	    }*/
+        //post {
+		 //   always {
+		  //    junit '**/target/*.xml' 
+		   // }
+		   // failure {
+		   //   echo 'Failed!'
+		   // }
+		   // success {
+		    //  echo 'Done!'
+		   // }
+	   // }
     }
 }

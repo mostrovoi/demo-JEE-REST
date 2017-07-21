@@ -48,6 +48,7 @@ pipeline {
 	          //      sh("git tag -a some_tag -m 'Jenkins'")
 	          //      sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
 	           // } 
+	           echo "Generació del tag build"
             }
         }
         stage ('INT') {

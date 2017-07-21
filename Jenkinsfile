@@ -44,6 +44,19 @@ pipeline {
    			}
         }
 
+        stage("Validació de SonarQube Gatekeeper") {
+        	steps {
+        		script {
+        			timeout(time: 1, unit: 'HOURS') { 
+	        			def qG = waitForQualityGate()
+	        			if(qG.status != 'OK') {
+	        				error "Codi no acompleix els mínims de qualitat : ${qG.status}"
+	        			}
+	        		}
+        		}
+        	}
+        }
+
         stage ('Commit Test') {          
             steps {
             	//TODO: Definir com es realitzaran aquests test i si la seva execució es controlarà per polítiques

@@ -2,11 +2,11 @@
 pipeline {
 	//Making sure that no executor is assigned unnecessarily
 	//This forces to assign an agent per each stage
-	agent none 
+	//agent none 
+	agent { docker 'maven:3-alpine' }
 	stages {
         stage ('Build')  {
         	steps {
-	        	agent { docker 'maven:3-alpine' }
 	    		sh "mvn package -Dmaven.test.skip=true"
 	   		}
 	    }

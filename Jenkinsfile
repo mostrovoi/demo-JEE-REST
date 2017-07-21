@@ -1,11 +1,15 @@
 #!groovy​
 pipeline {
+
 	agent any 
-	//agent { 
-	//	docker 'maven:3-alpine' 
-	//}
+
 	tools {
 		maven 'Maven 3.5.0'
+	}
+	environment {
+		GIT_COMMITER_NAME = "GenCat Jenkins"
+		GIT_COMMITER_EMAIL = "jenkins@jenkins.id"
+		MAIL_RECEIVER = "oscar.perez_gov.ext@gencat.cat"
 	}
 	stages {
 		
@@ -19,12 +23,16 @@ pipeline {
 		}
         stage ('Build')  {
         	steps {
-	    		sh "mvn package -Dmaven.test.skip=true"
+	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
 	   		}
 	    }
-        //stage ('Unit Test') {
-		//	sh "mvn test -Dmaven.test.ignore"
-        //}
+
+	    stage('Guardar Junits') {
+	    	steps {
+	    		archive '*/target/**/*'
+	    		junit '*/target/surefire-reports/*.xml'
+	    	}
+	    }
 
         stage ('Anàlisi de codi estàtic') {
         	steps {
@@ -35,12 +43,14 @@ pipeline {
 	   			}
    			}
         }
+
         stage ('Commit Test') {          
             steps {
             	//TODO: Definir com es realitzaran aquests test i si la seva execució es controlarà per polítiques
             	echo "Commit test aqui" 
         	}
         }
+
         stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
             steps {
@@ -51,7 +61,8 @@ pipeline {
 	           echo "Generació del tag build"
             }
         }
-        stage ('INT') {
+
+        stage ('Desplegament INT') {
             steps {
 	            echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
 	            echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
@@ -62,7 +73,7 @@ pipeline {
          		echo "Smoke test int"
          	}
         }
-        stage ('PRE') {
+        stage ('Desplegament PRE') {
         	steps {
        		 echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
              echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
@@ -92,29 +103,33 @@ pipeline {
 			}
 		}
 		
-		stage ('PRO') {
+		stage ('Desplegament PRO') {
 			steps {
 				echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
 				echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
         	}
         }
-    
-    //   stage ('Smoke Test') {
+	   
+    	 stage ('Smoke Test') {
+    	 	steps {
+    	 		echo "Per fer"
+    	 	}
 	//		def userInput3 = input(
 	//		    id: 'userInput3', message: 'Continuar quan es rebi confirmació de desplegament a PRO.', parameters: [
-			    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
-	//		])    
-     //   }
-        //post {
-		 //   always {
-		  //    junit '**/target/*.xml' 
-		   // }
-		   // failure {
-		   //   echo 'Failed!'
-		   // }
-		   // success {
-		    //  echo 'Done!'
-		   // }
-	   // }
-    }
+	//		    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
+		  //])    
+        }
+	} 
+    post {
+		always {
+		   //junit '**/target/*.xml' 
+		   deleteDir()
+		 }
+		 success {
+		 	mail to: "${MAIL.RECEIVER}", subject:"BUILD PASSA: ${currentBuild.fullDisplayName}", body "Tot ok"
+		 }
+		 failure {
+		 	mail to: "${MAIL.RECEIVER}", subject:"BUILD FALLA: ${currentBuild.fullDisplayName}", body "Nope"
+		 }
+   }
 }

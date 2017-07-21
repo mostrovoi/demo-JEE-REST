@@ -126,10 +126,12 @@ pipeline {
 		   deleteDir()
 		 }
 		 success {
-		 	mail to: "${MAIL_RECEIVER}", subject:"BUILD PASSA: ${currentBuild.fullDisplayName}", body "Tot ok"
+		 	echo "${MAIL_RECEIVER}"
+		 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD PASSA: ${currentBuild.fullDisplayName}", body "Tot ok"
 		 }
 		 failure {
-		 	mail to: "${MAIL_RECEIVER}", subject:"BUILD FALLA: ${currentBuild.fullDisplayName}", body "Nope"
+		 	echo "${MAIL_RECEIVER}"
+		 	//mail to: "${MAIL_RECEIVER}", subject:"BUILD FALLA: ${currentBuild.fullDisplayName}", body "Nope"
 		 }
    }
 }

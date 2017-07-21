@@ -24,63 +24,74 @@ pipeline {
    			}
         }
         stage ('Commit Test') {          
-            //TODO: Definir com es realitzaran aquests test i si la seva execució es controlarà per polítiques
-            echo "Commit test aqui" 
+            steps {
+            	//TODO: Definir com es realitzaran aquests test i si la seva execució es controlarà per polítiques
+            	echo "Commit test aqui" 
+        	}
         }
         stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
-            
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'MyID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-                sh("git tag -a some_tag -m 'Jenkins'")
-                sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
-            } 
+            steps {
+	            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'MyID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+	                sh("git tag -a some_tag -m 'Jenkins'")
+	                sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
+	            } 
+            }
         }
         stage ('INT') {
-            echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
-            echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
+            steps {
+	            echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
+	            echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
+	        }
         }
         stage ('Smoke Test INT') {
-        
+         	steps {}
         }
         stage ('PRE') {
+        	steps {
        		 echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
              echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
+        	}
         }
         stage ('Smoke Test PRE') {
-        	echo "Smoke Test de PRE"
+         	steps {
+        		echo "Smoke Test de PRE"
+            } 
         }
         
         stage ('Acceptance Test PRE') {
-           echo "Acceptance Test PRE"
+           steps {
+           	   echo "Acceptance Test PRE"
+           }
         }
         // Fi Acceptancy TEST
         
         // Inici Exploratory TEST
-        stage ('Exploratory Test PRE') {
-        	echo "Exploratory Test PRE"
-        }
+       // stage ('Exploratory Test PRE') {
+        //	echo "Exploratory Test PRE"
+       // }
         // Fi Exploratory TEST
         
         
          // Inici Generació TAG DEFINITIU
-        stage ('Generació Tag DEFINITIU') {
-        	echo "Generació Tag DEFINITIU"
-		}
+        //stage ('Generació Tag DEFINITIU') {
+        //	echo "Generació Tag DEFINITIU"
+		//}
 			// Fi Generació TAG DEFINITIU
         
         // Inici PRO
-        stage ('PRO') {
-			echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
-			echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
-        }
+       // stage ('PRO') {
+	//		echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+//			echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+ //       }
         // Fi PRO
         
         // Inici Smoke TEST
-        stage ('Smoke Test') {
-			def userInput3 = input(
-			    id: 'userInput3', message: 'Continuar quan es rebi confirmació de desplegament a PRO.', parameters: [
+    //    stage ('Smoke Test') {
+	//		def userInput3 = input(
+	//		    id: 'userInput3', message: 'Continuar quan es rebi confirmació de desplegament a PRO.', parameters: [
 			    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
-			])    
-        }
+	//		])    
+     //   }
     }
 }

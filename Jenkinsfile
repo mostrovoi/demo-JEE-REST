@@ -9,6 +9,7 @@ pipeline {
 		jdk 'jdk8'
 	}
 	stages {
+		
 		stage('Inicialització') {
 			steps {
 				sh '''
@@ -78,45 +79,42 @@ pipeline {
            	   echo "Acceptance Test PRE"
            }
         }
-        // Fi Acceptancy TEST
+
+        stage ('Exploratory Test PRE') {
+        	steps {
+        		echo "Exploratory Test PRE"
+        	}
+        }
         
-        // Inici Exploratory TEST
-       // stage ('Exploratory Test PRE') {
-        //	echo "Exploratory Test PRE"
-       // }
-        // Fi Exploratory TEST
-        
-        
-         // Inici Generació TAG DEFINITIU
-        //stage ('Generació Tag DEFINITIU') {
-        //	echo "Generació Tag DEFINITIU"
-		//}
-			// Fi Generació TAG DEFINITIU
-        
-        // Inici PRO
-       // stage ('PRO') {
-	//		echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
-//			echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
- //       }
-        // Fi PRO
-        
-        // Inici Smoke TEST
-    //    stage ('Smoke Test') {
+        stage ('Generació Tag DEFINITIU') {
+        	steps {
+        		echo "Generació Tag DEFINITIU"
+			}
+		}
+		
+		stage ('PRO') {
+			steps {
+				echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+				echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+        	}
+        }
+    
+    //   stage ('Smoke Test') {
 	//		def userInput3 = input(
 	//		    id: 'userInput3', message: 'Continuar quan es rebi confirmació de desplegament a PRO.', parameters: [
 			    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
 	//		])    
      //   }
-      post {
-	    always {
-	      junit '**/target/*.xml' 
-	    }
-	    failure {
-	      echo 'Failed!'
-	    }
-	    success {
-	      echo 'Done!'
-	    }
-	  }
+        /*post {
+		    always {
+		      junit '**/target/*.xml' 
+		    }
+		    failure {
+		      echo 'Failed!'
+		    }
+		    success {
+		      echo 'Done!'
+		    }
+	    }*/
     }
 }

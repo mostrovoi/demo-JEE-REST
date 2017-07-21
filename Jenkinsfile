@@ -1,10 +1,22 @@
 #!groovy​
 pipeline {
-	//Making sure that no executor is assigned unnecessarily
-	//This forces to assign an agent per each stage
-	//agent none 
-	agent { docker 'maven:3-alpine' }
+	agent any 
+	//agent { 
+	//	docker 'maven:3-alpine' 
+	//}
+	tools {
+		maven 'Maven 3.5.0'
+		jdk 'jdk8'
+	}
 	stages {
+		stage('Inicialització') {
+			steps {
+				sh '''
+					echo "PATH = ${PATH}"
+					echo "M2_HOME = ${M2_HOME}"
+				   '''
+			}
+		}
         stage ('Build')  {
         	steps {
 	    		sh "mvn package -Dmaven.test.skip=true"
@@ -95,5 +107,16 @@ pipeline {
 			    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
 	//		])    
      //   }
+      post {
+	    always {
+	      junit '**/target/*.xml' 
+	    }
+	    failure {
+	      echo 'Failed!'
+	    }
+	    success {
+	      echo 'Done!'
+	    }
+	  }
     }
 }

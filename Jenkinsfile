@@ -45,7 +45,9 @@ pipeline {
 	        }
         }
         stage ('Smoke Test INT') {
-         	steps {}
+         	steps {
+         		echo "Hello"
+         	}
         }
         stage ('PRE') {
         	steps {

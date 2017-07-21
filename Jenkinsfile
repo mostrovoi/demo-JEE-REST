@@ -1,52 +1,22 @@
-//S'ha de definir la tool Maven amb nom M3 i path que correspongui
+#!groovy​
+pipeline {
+	//Making sure that no executor is assigned unnecessarily
+	//This forces to assign an agent per each stage
+	agent none 
+	stages {
+        stage ('Build')  {
+	        agent { docker 'maven:3-alpine' }
+	    	sh "mvn package -Dmaven.test.skip=true"
+	    }
+        //stage ('Unit Test') {
+		//	sh "mvn test -Dmaven.test.ignore"
+        //}
 
-def mvnHome
-env.TITOL
-env.OBSERVACIONS
-def repositoryPath = "https://github.com/mostrovoi/demo-canigo.git"
-
-
-node {
-    try{
-                    
-        env.TITOL = "Petició de desplegament"
-        env.OBSERVACIONS = "Observacions de petició de proves"
-    	env.STAGE_NAME = "Settings inicials"
-        // Global definitions
-        // deployUtilities = load "${env.pathTasquesAnt}" + 'deployUtilitiesV2.groovy'
-        mvnHome = tool 'M3'
-        
-        // Inici CHECKOUT
-        stage ('Checkout') {
-            dir('treball')
-            {
-                git changelog: false, poll: false, url: "${repositoryPath}", branch: "master" 
-            }
-        }
-        // Fi CHECKOUT    
-        
-        // Inici BUILD
-        stage ('Build') {
-            //sh "${mvnHome}/bin/mvn package -Dmaven.test.skip=true -f treball/pom.xml"
-        }
-        // Fi BUILD
-        
-        // Inici Unit TEST
-        stage ('Unit Test') {
-			//sh "${mvnHome}/bin/mvn test -Dmaven.test.ignore -f treball/pom.xml"
-        }
-        // Fi Unit TEST
-        
-        // Inici Sonar:ACE
         stage ('Anàlisi de codi estàtic') {
-            // TODO: Integrar amb eina anàlisi statics
-             println("SonarQubeServer" )
-               // requires SonarQube Scanner 2.8+
-    	 	
+             // requires SonarQube Scanner 2.8+
     		withSonarQubeEnv('SonarQubeServer') {
-    			//TODO: Figure out how to automatically generate values for projecteKey and sources
-    			//Another options is sonar-project.properties file specific to a project
-      			sh "${mvnHome}/bin/mvn -f treball/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar"
+    			//TODO: Figure out how to automatically generate values for projecteKey and sources for non maven projects
+      			sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports"
    			}
         }
         // Fi Sonar:ACE
@@ -60,13 +30,12 @@ node {
         
         // Inici Generació TAG BUILD
         stage ('Generació Tag BUILD') {
-            println("Generacio tag" )
-            //TODO: Enllestir aquesta part. Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
+            //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
             
-        /*    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'MyID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'MyID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
                 sh("git tag -a some_tag -m 'Jenkins'")
                 sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
-            } */
+            } 
         }
         // Fi Generació TAG BUILD
         
@@ -130,12 +99,5 @@ node {
 			    // [$class: 'TextParameterDefinition', defaultValue: 'yesWeCan', description: 'Commit', name: 'commitTest']
 			])    
         }
-        // Fi Smoke TEST
-
-    } catch (Exception e) {
-    	println("-----------------> EXCEPCION <-----------------")
-    	error("S'ha produït una excepció al STAGE ${env.STAGE_NAME} \n " + e)
-    	//currentBuild.result = 'FAILURE'
-    	emailext subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - FAILURE!", to: "oscar.perez_gov.ext@gencat.cat",body: "${e.message}"
     }
 }

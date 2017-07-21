@@ -122,14 +122,14 @@ pipeline {
 	} 
     post {
 		always {
-		   //junit '**/target/*.xml' 
+		   junit '**/target/*.xml' 
 		   deleteDir()
 		 }
 		 success {
-		 	mail to: "${MAIL.RECEIVER}", subject:"BUILD PASSA: ${currentBuild.fullDisplayName}", body "Tot ok"
+		 	mail to: "${MAIL_RECEIVER}", subject:"BUILD PASSA: ${currentBuild.fullDisplayName}", body "Tot ok"
 		 }
 		 failure {
-		 	mail to: "${MAIL.RECEIVER}", subject:"BUILD FALLA: ${currentBuild.fullDisplayName}", body "Nope"
+		 	mail to: "${MAIL_RECEIVER}", subject:"BUILD FALLA: ${currentBuild.fullDisplayName}", body "Nope"
 		 }
    }
 }

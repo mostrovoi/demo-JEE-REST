@@ -34,6 +34,14 @@ pipeline {
 	   // 	}
 	    //}
 
+	    stage('Ciberseguretat: Fortify') {
+	    	//TODO: xxx
+	    }
+
+	    stage('Ciberseguretat: ZAP') {
+	    	//TODO: xxx
+	    }
+
         stage ('Anàlisi de codi estàtic') {
         	steps {
 	             // requires SonarQube Scanner 2.8+      	
@@ -57,20 +65,16 @@ pipeline {
         	}
         }
 
-        stage ('Commit Test') {          
-            steps {
-            	//TODO: Definir com es realitzaran aquests test i si la seva execució es controlarà per polítiques
-            	echo "Commit test aqui" 
-        	}
-        }
-
         stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
             steps {
-	          //  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'MyID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-	          //      sh("git tag -a some_tag -m 'Jenkins'")
-	          //      sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
-	           // } 
+               pom = readMavenPom file: 'pom.xml'
+	      	   //Si la versió es SNAPSHOT tirar-la enrera
+
+	           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+	                sh("git tag -a ${pom.version} -m 'Jenkins'")
+	                sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
+	           } 
 	           echo "Generació del tag build"
             }
         }

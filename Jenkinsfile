@@ -82,8 +82,9 @@ pipeline {
 			                sh("GIT_ASKPASS=true git push origin --tags")
 			           }
 			        }
-			        catch (all) {
+			        catch (Exception ex) {
 			        	error "Error generant el tag."
+						org.codehaus.groovy.runtime.StackTraceUtils.sanitize(ex).printStackTrace()
 			        }
 			        finally {
 			        	sh("git config --unset user.email")

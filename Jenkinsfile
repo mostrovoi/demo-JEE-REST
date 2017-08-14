@@ -27,13 +27,6 @@ pipeline {
 	   		}
 	    }
 
-	   // stage('Guardar Junits') {
-	   // 	steps {
-	   // 		archive '*/target/**/*'
-	   // 		junit '*/target/surefire-reports/*.xml'
-	   // 	}
-	    //}
-
 	    stage('Ciberseguretat: Fortify') {
 	    	//TODO: xxx
 	    	steps {
@@ -52,7 +45,6 @@ pipeline {
         	steps {
 	             // requires SonarQube Scanner 2.8+      	
 	    		withSonarQubeEnv('SonarQubeServer') {
-	    			//TODO: Figure out how to automatically generate values for projecteKey and sources for non maven projects
 	      			sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports"
 	   			}
    			}
@@ -61,7 +53,7 @@ pipeline {
         stage("Validació de SonarQube Gatekeeper") {
         	steps {
         		script {
-        			timeout(time: 1, unit: 'HOURS') { 
+        			timeout(time: 5, unit: 'MINUTES') { 
 	        			def qG = waitForQualityGate()
 	        			if(qG.status != 'OK') {
 	        				error "Codi no acompleix els mínims de qualitat : ${qG.status}"
@@ -147,7 +139,8 @@ pipeline {
 	} 
     post {
 		always {
-		   junit '**/target/*.xml' 
+		   //archive "target/**/*"
+		   junit 'target/surefire-reports/*.xml' 
 		   deleteDir()
 		 }
 		 success {

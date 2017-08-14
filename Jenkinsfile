@@ -75,7 +75,7 @@ pipeline {
 			                sh('git config user.email "jenkins@jenkins.com"')
 			                sh('git config user.name "Jenkins"')
 			                sh("git config credential.username ${env.GIT_USERNAME}")
-			                sh("git config credential.helper "!echo password=\$GIT_PASSWORD; echo'")
+			                sh("git config credential.helper '!echo password=\$GIT_PASSWORD; echo'")
 			                sh("")
 			                sh("git tag -a ${pom.version} -m 'Jenkins'")
 			                sh("GIT_ASKPASS=true git push origin --tags')

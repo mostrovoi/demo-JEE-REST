@@ -69,15 +69,25 @@ pipeline {
                script {
 	               def pom = readMavenPom file: 'pom.xml'
 		      	   //Si la versió es SNAPSHOT tirar-la enrera
-		      	   //Nomes fer-ho un cop
-		      	   sh('git config --global user.email "jenkins@jenkins.com"')
-		           sh('git config --global user.name "Jenkins"')
 
-		           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-		                sh("git tag -a ${pom.version} -m 'Jenkins'")
-		                sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@<REPO> --tags')
-		           } 
-		           echo "Generació del tag build"
+		      	   try {
+			           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+			                sh('git config user.email "jenkins@jenkins.com"')
+			                sh('git config user.name "Jenkins"')
+			                sh("git config credential.username ${env.GIT_USERNAME}")
+			                sh("git config credential.helper "!echo password=\$GIT_PASSWORD; echo'")
+			                sh("")
+			                sh("git tag -a ${pom.version} -m 'Jenkins'")
+			                sh("GIT_ASKPASS=true git push origin --tags')
+			           }
+			        }
+			        finally {
+			        	sh("git config --unset user.email")
+			        	sh("git config --unset user.name")
+			        	sh("git config --unset credential.username")
+			        	sh("git config --unset credential.helper")
+			        }
+					echo "Generació del tag build"
 	         	}
 	         }
         }

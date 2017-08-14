@@ -70,8 +70,9 @@ pipeline {
 	               def pom = readMavenPom file: 'pom.xml'
 		      	   //Si la versió es SNAPSHOT o ja existeix tirar-la enrera
 		      	   def TAGVERSION = ${pom.version}
-		      	   if (TAGVERSION.contains("SNAPSHOT"))
+		      	   if (TAGVERSION.contains("SNAPSHOT")) {
 		      	   		error "El tag no pot contenir SNAPSHOT"
+		      	   }
 		      	   try {
 			           sh("git tag -a ${pom.version} -m 'Jenkins'")
 			           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {

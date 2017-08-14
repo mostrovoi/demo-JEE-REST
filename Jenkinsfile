@@ -83,7 +83,7 @@ pipeline {
 			                sh("GIT_ASKPASS=true git push origin --tags")
 			           }
 			        }
-			        catch {
+			        catch (all) {
 			        	error "Error generant el tag"
 			        }
 			        finally {

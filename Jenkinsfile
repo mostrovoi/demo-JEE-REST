@@ -68,8 +68,10 @@ pipeline {
             steps {
                script {
 	               def pom = readMavenPom file: 'pom.xml'
-		      	   //Si la versió es SNAPSHOT tirar-la enrera
-
+		      	   //Si la versió es SNAPSHOT o ja existeix tirar-la enrera
+		      	   def TAGVERSION = ${pom.version}
+		      	   if TAGVERSION.contains("SNAPSHOT")
+		      	   		error "El tag no pot contenir SNAPSHOT"
 		      	   try {
 			           sh("git tag -a ${pom.version} -m 'Jenkins'")
 			           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
@@ -79,6 +81,9 @@ pipeline {
 			                sh("git config credential.helper '!echo password=\$GIT_PASSWORD; echo'")
 			                sh("GIT_ASKPASS=true git push origin --tags")
 			           }
+			        }
+			        catch {
+			        	error "Error generant el tag"
 			        }
 			        finally {
 			        	sh("git config --unset user.email")

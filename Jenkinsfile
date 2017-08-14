@@ -69,6 +69,9 @@ pipeline {
                script {
 	               def pom = readMavenPom file: 'pom.xml'
 		      	   //Si la versió es SNAPSHOT tirar-la enrera
+		      	   //Nomes fer-ho un cop
+		      	   sh('git config --global user.email "jenkins@jenkins.com"')
+		           sh('git config --global user.name "Jenkins"')
 
 		           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
 		                sh("git tag -a ${pom.version} -m 'Jenkins'")

@@ -6,7 +6,6 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <groupId>org.springframework.boot</groupId>
         <version>1.2.6.RELEASE</version>
-        <relativePath />
     </parent>
 
     <groupId>cat.gencat.springbootdemo</groupId>
@@ -351,6 +350,11 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-data</artifactId>
         </dependency>
+        <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>fabric8-arquillian</artifactId>
+      <scope>test</scope>
+    </dependency>
         <!-- reporting -->
     </dependencies>
     <build>
@@ -364,7 +368,6 @@
                 </includes>
             </resource>
             <resource>
-                <filtering>false</filtering>
                 <directory>src/main/resources</directory>
                 <excludes>
                     <exclude>**/*.xml</exclude>
@@ -512,6 +515,21 @@
                     </arguments>
                 </configuration>
             </plugin>
+            <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-maven-plugin</artifactId>
+        <version>3.2.9</version>
+        <executions>
+          <execution>
+            <id>fmp</id>
+            <goals>
+              <goal>resource</goal>
+              <goal>helm</goal>
+              <goal>build</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
         </plugins>
     </build>
 
@@ -622,5 +640,33 @@
                 </dependency>
             </dependencies>
         </profile>
+        <profile>
+      <id>kit</id>
+      <activation />
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.19</version>
+            <configuration>
+              <includes>
+                <include>**/*KT.*</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     </profiles>
+
+    <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric8-arquillian</artifactId>
+        <version>2.2.192</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>

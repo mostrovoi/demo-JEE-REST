@@ -62,7 +62,8 @@
         <spring-security.version>4.0.2.RELEASE</spring-security.version>
         <springfox.version>2.0.3</springfox.version>
         <usertype-core.version>4.0.0.GA</usertype-core.version>
-         <selenium.version>2.53.1</selenium.version>
+        <selenium.version>2.53.1</selenium.version>
+        <testng.version>6.9.10</testng.version>
 
     </properties>
 
@@ -351,11 +352,16 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-data</artifactId>
         </dependency>
-      <!-- Selenium  -->
+      <!-- Selenium  && testng-->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
         </dependency>
         <!-- reporting -->
     </dependencies>

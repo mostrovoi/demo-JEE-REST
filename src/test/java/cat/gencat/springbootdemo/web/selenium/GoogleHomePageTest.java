@@ -23,22 +23,18 @@ public class GoogleHomePageTest {
     @BeforeClass
     public void testSetUp() throws MalformedURLException {
 
-        //driver = new FirefoxDriver();
-
         DesiredCapabilities capability = DesiredCapabilities.firefox();
         // Say you want a specific node to thread your request, just specify the node name (it must be running a selenium configuration though)
         capability.setBrowserName("firefox");
         
-        driver = new RemoteWebDriver(new URL("http://selenium-hub:4444/wd/hub"), capability);
+        driver = new RemoteWebDriver(new URL("http://selenium.devops.matxa.es/wd/hub"), capability);
         
 
     }
 
     @Test
     public void verifyFistTestExample() {
-        //driver.navigate().to(appURL);
-        //String getTitle = driver.getTitle();
-        //Assert.assertEquals(getTitle, "Google");
+
 
         driver.get("http://www.google.es");
         Assert.assertEquals(driver.getTitle(), "Google");

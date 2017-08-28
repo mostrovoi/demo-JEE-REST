@@ -84,7 +84,6 @@ pipeline {
 			        }
 			        catch (Exception ex) {
 			        	error "Error generant el tag."
-						org.codehaus.groovy.runtime.StackTraceUtils.sanitize(ex).printStackTrace()
 			        }
 			        finally {
 			        	sh("git config --unset user.email")

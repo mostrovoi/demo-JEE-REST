@@ -517,21 +517,6 @@
                     </arguments>
                 </configuration>
             </plugin>
-            <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>fabric8-maven-plugin</artifactId>
-        <version>3.2.9</version>
-        <executions>
-          <execution>
-            <id>fmp</id>
-            <goals>
-              <goal>resource</goal>
-              <goal>helm</goal>
-              <goal>build</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
         </plugins>
     </build>
 
@@ -660,15 +645,4 @@
       </build>
     </profile>
     </profiles>
-
-    <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>fabric8-arquillian</artifactId>
-        <version>2.2.192</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 </project>

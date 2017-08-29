@@ -15,10 +15,6 @@
 
     <name>springbootdemo</name>
 
-    <prerequisites>
-        <maven>3.0.0</maven>
-    </prerequisites>
-
     <properties>
         <assertj-core.version>2.1.0</assertj-core.version>
         <awaitility.version>1.4.0</awaitility.version>

@@ -7,7 +7,7 @@ pipeline {
 		maven 'Maven 3.5.0'
 	}
 	environment {
-		GIT_COMMITER_NAME = "GenCat Jenkins"
+		GIT_COMMITER_NAME = "Gencat Jenkins"
 		GIT_COMMITER_EMAIL = "jenkins@jenkins.id"
 		MAIL_RECEIVER = "oscar.perez_gov.ext@gencat.cat"
 	}

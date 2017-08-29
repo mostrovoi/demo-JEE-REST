@@ -75,8 +75,6 @@ pipeline {
 		      	   try {
 			           sh("git tag -a ${pom.version} -m 'Jenkins'")
 			           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-			                sh("git config user.email 'jenkins@jenkins.com'")
-			                sh("git config user.name 'Jenkins'")
 			                sh("git config credential.username ${env.GIT_USERNAME}")
 			                sh("git config credential.helper '!echo password=\$GIT_PASSWORD; echo'")
 			                sh("GIT_ASKPASS=true git push origin --tags")
@@ -86,8 +84,6 @@ pipeline {
 			        	error "Error generant el tag."
 			        }
 			        finally {
-			        	sh("git config --unset user.email")
-			        	sh("git config --unset user.name")
 			        	sh("git config --unset credential.username")
 			        	sh("git config --unset credential.helper")
 			        }

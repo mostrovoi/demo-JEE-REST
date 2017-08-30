@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: demo-canigo-postgres
+  name: demo-canigo-postgres
+  namespace: dev
+spec:
+  ports:
+  - name: postgresql
+    port: 5432
+    protocol: TCP
+    targetPort: postgresql
+  selector:
+    app: demo-canigo-postgres
+  type: ClusterIP

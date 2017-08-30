@@ -348,7 +348,7 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-data</artifactId>
         </dependency>
-      <!-- Selenium  && testng-->
+      <!-- Selenium  && testng
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
@@ -359,7 +359,7 @@
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
         </dependency>
-        <!-- reporting -->
+       reporting -->
     </dependencies>
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>

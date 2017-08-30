@@ -1,7 +1,7 @@
 #!groovy​
 pipeline {
 
-	agent any 
+	agent none 
 
 	tools {
 		maven 'Maven 3.5.0'
@@ -22,6 +22,7 @@ pipeline {
 			}
 		}
         stage ('Build')  {
+        	agent any
         	steps {
 	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
 	   		}
@@ -29,6 +30,7 @@ pipeline {
 
 	    stage('Ciberseguretat: Fortify') {
 	    	//TODO: xxx
+	    	agent any
 	    	steps {
 	    		echo "Ciberseguretat: Fortify"
 	    	}
@@ -36,12 +38,14 @@ pipeline {
 
 	    stage('Ciberseguretat: ZAP') {
 	    	//TODO: xxx
+	    	agent any
 	    	steps {
 	    		echo "Ciberseguretat : ZAP"
 	    	}
 	    }
 
         stage ('Anàlisi de codi estàtic') {
+        	agent any
         	steps {
 	             // requires SonarQube Scanner 2.8+      	
 	    		withSonarQubeEnv('SonarQubeServer') {
@@ -51,6 +55,7 @@ pipeline {
         }
 
         stage("Validació de SonarQube Gatekeeper") {
+        	agent any
         	steps {
         		script {
         			timeout(time: 5, unit: 'MINUTES') { 
@@ -65,6 +70,7 @@ pipeline {
 
        /* stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
+             agent any
              steps {
                script {
 	               def pom = readMavenPom file: 'pom.xml'
@@ -90,7 +96,14 @@ pipeline {
 	         	}
 	         }
         } */
+
         stage ('Generació imatge docker') {
+	        agent {
+	        	docker { 
+	        			 image 'docker:stable-dind'
+	        			 args '--privileged' 
+	        	}
+	    	}
            steps {
 	           script {
 	           	  dir("src/assembly/docker/app") {
@@ -159,7 +172,6 @@ pipeline {
 	} 
     post {
 		always {
-		   //archive "target/**/*"
 		   junit 'target/surefire-reports/*.xml' 
 		   deleteDir()
 		 }

@@ -23,30 +23,24 @@ pipeline {
 			}
 		}
         stage ('Build')  {
-        	agent any
         	steps {
 	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
 	   		}
 	    }
 
 	    stage('Ciberseguretat: Fortify') {
-	    	//TODO: xxx
-	    	agent any
 	    	steps {
 	    		echo "Ciberseguretat: Fortify"
 	    	}
 	    }
 
 	    stage('Ciberseguretat: ZAP') {
-	    	//TODO: xxx
-	    	agent any
 	    	steps {
 	    		echo "Ciberseguretat : ZAP"
 	    	}
 	    }
 
         stage ('Anàlisi de codi estàtic') {
-        	agent any
         	steps {
 	             // requires SonarQube Scanner 2.8+      	
 	    		withSonarQubeEnv('SonarQubeServer') {
@@ -56,7 +50,6 @@ pipeline {
         }
 
         stage("Validació de SonarQube Gatekeeper") {
-        	agent any
         	steps {
         		script {
         			timeout(time: 5, unit: 'MINUTES') { 
@@ -71,7 +64,6 @@ pipeline {
 
        /* stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
-             agent any
              steps {
                script {
 	               def pom = readMavenPom file: 'pom.xml'
@@ -114,55 +106,47 @@ pipeline {
 	        }
         }
         stage ('Desplegament INT') {
-        	agent any
             steps {
 	            echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
 	            echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
 	        }
         }
         stage ('Smoke Test INT') {
-            agent any
          	steps {
          		echo "Smoke test int"
          	}
         }
         stage ('Desplegament PRE') {
-            agent any
         	steps {
        		 echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
              echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
         	}
         }
         stage ('Smoke Test PRE') {
-        	agent any
          	steps {
         		echo "Smoke Test de PRE"
             } 
         }
         
         stage ('Acceptance Test PRE') {
-           agent any
            steps {
            	   echo "Acceptance Test PRE"
            }
         }
 
         stage ('Exploratory Test PRE') {
-            agent any
         	steps {
         		echo "Exploratory Test PRE"
         	}
         }
         
         stage ('Generació Tag DEFINITIU') {
-            agent any
         	steps {
         		echo "Generació Tag DEFINITIU"
 			}
 		}
 		
 		stage ('Desplegament PRO') {
-		    agent any
 			steps {
 				echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
 				echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
@@ -170,7 +154,6 @@ pipeline {
         }
 	   
     	 stage ('Smoke Test') {
-    	    agent any
     	 	steps {
     	 		echo "Per fer"
     	 	}

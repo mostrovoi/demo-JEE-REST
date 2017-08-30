@@ -93,9 +93,9 @@ pipeline {
         stage ('Generació imatge docker') {
            steps {
 	           script {
-	           	   dir("src/assembly/docker/app") {
-	           	      sh("docker build . -t gencat.azurecr.io/demo-canigo:latest")
-	           	   }
+	           	  // dir("src/assembly/docker/app") {
+	           	      sh("docker build src/assembly/docker/app -t gencat.azurecr.io/demo-canigo:latest")
+	           	  // }
 	           }
 	        }
         }

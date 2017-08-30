@@ -1,7 +1,8 @@
 #!groovy​
 pipeline {
 
-	agent none 
+	//TODO: Change to none and specify agent per each step
+	agent any 
 
 	tools {
 		maven 'Maven 3.5.0'

@@ -63,9 +63,9 @@ pipeline {
         	}
         }
 
-        stage ('Generació Tag BUILD') {
+       /* stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
-            steps {
+             steps {
                script {
 	               def pom = readMavenPom file: 'pom.xml'
 		      	   //Si la versió es SNAPSHOT o ja existeix tirar-la enrera
@@ -89,13 +89,13 @@ pipeline {
 			        }
 	         	}
 	         }
-        }
+        } */
         stage ('Generació imatge docker') {
            steps {
 	           script {
-	           	  // dir("src/assembly/docker/app") {
-	           	      sh("docker build src/assembly/docker/app -t gencat.azurecr.io/demo-canigo:latest")
-	           	  // }
+	           	  dir("src/assembly/docker/app") {
+	           	      sh("docker build . -t gencat.azurecr.io/demo-canigo:latest")
+	           	  }
 	           }
 	        }
         }

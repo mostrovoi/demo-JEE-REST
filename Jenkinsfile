@@ -113,47 +113,55 @@ pipeline {
 	        }
         }
         stage ('Desplegament INT') {
+        	agent any
             steps {
 	            echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
 	            echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
 	        }
         }
         stage ('Smoke Test INT') {
+            agent any
          	steps {
          		echo "Smoke test int"
          	}
         }
         stage ('Desplegament PRE') {
+            agent any
         	steps {
        		 echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
              echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
         	}
         }
         stage ('Smoke Test PRE') {
+        	agent any
          	steps {
         		echo "Smoke Test de PRE"
             } 
         }
         
         stage ('Acceptance Test PRE') {
+           agent any
            steps {
            	   echo "Acceptance Test PRE"
            }
         }
 
         stage ('Exploratory Test PRE') {
+            agent any
         	steps {
         		echo "Exploratory Test PRE"
         	}
         }
         
         stage ('Generació Tag DEFINITIU') {
+            agent any
         	steps {
         		echo "Generació Tag DEFINITIU"
 			}
 		}
 		
 		stage ('Desplegament PRO') {
+		    agent any
 			steps {
 				echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
 				echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
@@ -161,6 +169,7 @@ pipeline {
         }
 	   
     	 stage ('Smoke Test') {
+    	    agent any
     	 	steps {
     	 		echo "Per fer"
     	 	}

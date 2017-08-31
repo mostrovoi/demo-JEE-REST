@@ -5,12 +5,17 @@ pipeline {
  		kubernetes {
 	      label 'jnlp-slave'
 	      containerTemplate {
-	      name 'maven'
-	      image 'maven:3.3.9-jdk-8-alpine'
+	      name 'docker'
+	      image 'docker:1.11'
 	      ttyEnabled true
 	      command 'cat'
       	 }
+      	  volumes {
+      	  	hostPathVolume 'var/run/docker.sock'
+      	  	mountPath '/var/run/docker.sock'
+      	  }
        }
+
     }
 
 	tools {

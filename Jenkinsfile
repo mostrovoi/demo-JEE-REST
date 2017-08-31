@@ -108,6 +108,5 @@ dockerTemplate {
 			echo "Per fer"
 	    }
 	 }
-  }
-}
+ }
 

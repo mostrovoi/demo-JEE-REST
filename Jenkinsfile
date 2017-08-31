@@ -14,8 +14,8 @@
 ]) */
 
 
-dockerTemplate {
-    mavenTemplate {
+dockerTemplate(label: "docker") {
+    mavenTemplate( label: "maven") {
 	    node("maven-and-docker") {
 
 			stage("Build") {

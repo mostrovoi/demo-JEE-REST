@@ -16,10 +16,9 @@ properties([
     pipelineTriggers([])
 ])
 
-def srcdir = 'github.com/mostrovoi/demo-canigo.git'
 
 podTemplate(label: 'build-pod', containers: [
-		//containerTemplate(name: 'jnlp', image: JNLP_IMAGE, args: '${computer.jnlpmac} ${computer.name}'),
+		containerTemplate(name: 'jnlp', image: JNLP_IMAGE, args: '${computer.jnlpmac} ${computer.name}'),
 		containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
 		containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')
 	],
@@ -29,35 +28,34 @@ podTemplate(label: 'build-pod', containers: [
 ) {
 
 node('build-pod') {
-		
-		stage("Checkout") {
-			checkout scm
+	
+	stage("Build") {
+		git 'https://github.com/mostrovoi/demo-canigo.git'
+		container("maven") {
+        	sh "mvn clean package -Dmaven.test.failure.ignore=true"			
 		}
-
-        stage ('Build')  {
-        	git 'http://github.com/mostrovoi/demo-canigo.git'
-        	container("maven"){
-	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
-	   		}
-	    }
-
-	    stage('Ciberseguretat: Fortify & ZAP') {
-	    	echo "Ciberseguretat: Fortify"
-	    }
+	}
+	
+	stage('Ciberseguretat: Fortify & ZAP') {
+    	echo "Ciberseguretat: Fortify"
+    }
 
 
-        stage ('Anàlisi de codi estàtic') {
+    stage ('Anàlisi de codi estàtic') {
+    	container("maven") {
 			sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports -Dsonar.host.url=${SONARQUBE_URL}" 
-        } 
+    	}
+    } 
 
-        stage("Validació de SonarQube Gatekeeper") {
-			timeout(time: 5, unit: 'MINUTES') { 
-    			def qG = waitForQualityGate()
-    			if(qG.status != 'OK') {
-    				error "Codi no acompleix els mínims de qualitat : ${qG.status}"
-    			}
-    		}
-        } 
+    stage("Validació de SonarQube Gatekeeper") {
+		timeout(time: 5, unit: 'MINUTES') { 
+			def qG = waitForQualityGate()
+			if(qG.status != 'OK') {
+				error "Codi no acompleix els mínims de qualitat : ${qG.status}"
+			}
+		}
+    } 
+
 
        /* stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
@@ -83,48 +81,48 @@ node('build-pod') {
 	        }
         } */
 
-        stage ('Generació imatge docker') {
-        	container('docker') {
-	       	  dir("src/assembly/docker/app") {
-	       	      sh("docker build . -t gencat.azurecr.io/demo-canigo:latest")
-	       	  }
-	       	}
-        }
-        stage ('Desplegament INT') {
-			echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
-			echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
-		}
+    stage ('Generació imatge docker') {
+    	container('docker') {
+       	  dir("src/assembly/docker/app") {
+       	      sh("docker build . -t gencat.azurecr.io/demo-canigo:latest")
+       	  }
+       	}
+    }
 
-        stage ('Smoke Test INT') {
-         	echo "Smoke test int"
-        }
-        stage ('Desplegament PRE') {
-			echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
-			echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
-		}
-        stage ('Smoke Test PRE') {
-        	echo "Smoke Test de PRE"
-        }
-        
-        stage ('Acceptance Test PRE') {
-           	echo "Acceptance Test PRE"
-        }
+    stage ('Desplegament INT') {
+		echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
+		echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
+	}
 
-        stage ('Exploratory Test PRE') {
-        	echo "Exploratory Test PRE"
-        }
-        
-        stage ('Generació Tag DEFINITIU') {
-        	echo "Generació Tag DEFINITIU"
-		}
-		
-		stage ('Desplegament PRO') {
-			echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
-			echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
-	    }   
-		stage ('Smoke Test') {
-			echo "Per fer"
-	    }
-	 }
+    stage ('Smoke Test INT') {
+     	echo "Smoke test int"
+    }
+    stage ('Desplegament PRE') {
+		echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
+		echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
+	}
+    stage ('Smoke Test PRE') {
+    	echo "Smoke Test de PRE"
+    }
+    
+    stage ('Acceptance Test PRE') {
+       	echo "Acceptance Test PRE"
+    }
+
+    stage ('Exploratory Test PRE') {
+    	echo "Exploratory Test PRE"
+    }
+    
+    stage ('Generació Tag DEFINITIU') {
+    	echo "Generació Tag DEFINITIU"
+	}
+	
+	stage ('Desplegament PRO') {
+		echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+		echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+    }   
+	stage ('Smoke Test') {
+		echo "Per fer"
+    }
 }
 

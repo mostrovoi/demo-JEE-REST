@@ -1,11 +1,37 @@
-#!groovy​
-podTemplate(label: 'docker-maven', containers: [
-	containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
-	containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')],
-  	volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]
+#!usr/bin/env groovy
+properties([
+    parameters([
+        string(defaultValue: 'jenkinsci/jnlp-slave:2.62-alpine', description: '', name: 'JNLP_IMAGE'),
+        string(defaultValue: 'devops', description: '', name: 'K8S_NAMESPACE'),
+        //string(defaultValue: 'quay.io', description: '', name: 'REGISTRY_SERVER'),
+        //string(defaultValue: 'eric-cartman', description: '', name: 'REGISTRY_USERNAME'),
+        //password(defaultValue: 'badkitty', description: '', name: 'REGISTRY_PASSWORD'),
+        //string(defaultValue: 'quay.io/eric-cartman', description: '', name: 'REGISTRY_REPO'),
+        string(defaultValue: '1.12.6', description: '', name: 'DOCKER_VERSION'),
+        string(defaultValue: 'v2.1.3', description: '', name: 'HELM_VERSION'),
+        string(defaultValue: 'v1.4.6', description: '', name: 'KUBECTL_VERSION')
+        string(defaultValue: 'http://sonarqube.devops', description: '', name: "SONARQUBE_URL")
+    ]),
+    pipelineTriggers([])
+])
+
+def srcdir = 'github.com/mostrovoi/demo-canigo.git'
+
+podTemplate(label: 'build-pod', containers: [
+		containerTemplate(name: 'jnlp', image: JNLP_IMAGE, args: '${computer.jnlpmac} ${computer.name}'),
+		containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
+		containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')
+	],
+  	volumes: [
+  		hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
+  	]
 ) {
 
-node('docker-maven') {
+node('build-pod') {
+		
+		stage("Checkout") {
+			checkout scm
+		}
 
         stage ('Build')  {
         	git 'http://github.com/mostrovoi/demo-canigo.git'
@@ -19,21 +45,18 @@ node('docker-maven') {
 	    }
 
 
-        /* stage ('Anàlisi de codi estàtic') {
-             // requires SonarQube Scanner 2.8+      	
-    		withSonarQubeEnv('SonarQubeServer') {
-      			sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports"
-   			}
-        } */
+        stage ('Anàlisi de codi estàtic') {
+			sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports -Dsonar.host.url=${SONARQUBE_URL}" 
+        } 
 
-        /* stage("Validació de SonarQube Gatekeeper") {
+        stage("Validació de SonarQube Gatekeeper") {
 			timeout(time: 5, unit: 'MINUTES') { 
     			def qG = waitForQualityGate()
     			if(qG.status != 'OK') {
     				error "Codi no acompleix els mínims de qualitat : ${qG.status}"
     			}
     		}
-        } */
+        } 
 
        /* stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag

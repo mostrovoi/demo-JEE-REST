@@ -3,14 +3,10 @@
 properties([
     parameters([
         string(defaultValue: 'jenkinsci/jnlp-slave:2.62-alpine', description: '', name: 'JNLP_IMAGE'),
-        string(defaultValue: 'devops', description: '', name: 'K8S_NAMESPACE'),
         //string(defaultValue: 'quay.io', description: '', name: 'REGISTRY_SERVER'),
         //string(defaultValue: 'eric-cartman', description: '', name: 'REGISTRY_USERNAME'),
         //password(defaultValue: 'badkitty', description: '', name: 'REGISTRY_PASSWORD'),
         //string(defaultValue: 'quay.io/eric-cartman', description: '', name: 'REGISTRY_REPO'),
-        string(defaultValue: '1.12.6', description: '', name: 'DOCKER_VERSION'),
-        string(defaultValue: 'v2.1.3', description: '', name: 'HELM_VERSION'),
-        string(defaultValue: 'v1.4.6', description: '', name: 'KUBECTL_VERSION'),
         string(defaultValue: 'http://sonarqube.devops', description: '', name: "SONARQUBE_URL")
     ]),
     pipelineTriggers([])
@@ -23,17 +19,17 @@ podTemplate(label: 'build-pod', containers: [
 		containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')
 	],
   	volumes: [
+  	 	persistentVolumeClaim(mountPath: '/root/.m2/repository', claimName: 'maven-repo', readOnly: false)
   		hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
   	]
 ) {
 
-node('build-pod') {
+dockerTemplate {
+    mavenTemplate {
 	
 		stage("Build") {
 			git 'https://github.com/mostrovoi/demo-canigo.git'
-			container("maven") {
-	        	sh "mvn clean package -Dmaven.test.failure.ignore=true"			
-			}
+	        sh "mvn clean package -Dmaven.test.failure.ignore=true"			
 		}
 		
 		stage('Ciberseguretat: Fortify & ZAP') {
@@ -41,7 +37,7 @@ node('build-pod') {
 	    }
 
 
-	    stage ('Anàlisi de codi estàtic') {
+	    /*stage ('Anàlisi de codi estàtic') {
 	    	container("maven") {
 				sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports -Dsonar.host.url=${SONARQUBE_URL}" 
 	    	}
@@ -54,7 +50,7 @@ node('build-pod') {
 					error "Codi no acompleix els mínims de qualitat : ${qG.status}"
 				}
 			}
-	    } 
+	    } */
 
 
 	       /* stage ('Generació Tag BUILD') {
@@ -82,10 +78,8 @@ node('build-pod') {
 	        } */
 
 	    stage ('Generació imatge docker') {
-	    	container('docker') {
 	       	  dir("src/assembly/docker/app") {
 	       	      sh("docker build . -t gencat.azurecr.io/demo-canigo:latest")
-	       	  }
 	       	}
 	    }
 
@@ -125,5 +119,6 @@ node('build-pod') {
 			echo "Per fer"
 	    }
 	 }
+  }
 }
 

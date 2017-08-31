@@ -9,7 +9,7 @@ properties([
         //string(defaultValue: 'quay.io/eric-cartman', description: '', name: 'REGISTRY_REPO'),
         string(defaultValue: '1.12.6', description: '', name: 'DOCKER_VERSION'),
         string(defaultValue: 'v2.1.3', description: '', name: 'HELM_VERSION'),
-        string(defaultValue: 'v1.4.6', description: '', name: 'KUBECTL_VERSION')
+        string(defaultValue: 'v1.4.6', description: '', name: 'KUBECTL_VERSION'),
         string(defaultValue: 'http://sonarqube.devops', description: '', name: "SONARQUBE_URL")
     ]),
     pipelineTriggers([])

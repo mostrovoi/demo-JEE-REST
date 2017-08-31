@@ -1,5 +1,6 @@
 #!usr/bin/env groovy
-
+import dockerTemplate
+import mavenTemplate
 properties([
     parameters([
         string(defaultValue: 'jenkinsci/jnlp-slave:2.62-alpine', description: '', name: 'JNLP_IMAGE'),

@@ -1,6 +1,19 @@
 #!usr/bin/env groovy
 @Library('github.com/mostrovoi/pipeline-library@master')
 
+properties([
+    parameters([
+        string(defaultValue: 'jenkinsci/jnlp-slave:2.62-alpine', description: '', name: 'JNLP_IMAGE'),
+        //string(defaultValue: 'quay.io', description: '', name: 'REGISTRY_SERVER'),
+        //string(defaultValue: 'eric-cartman', description: '', name: 'REGISTRY_USERNAME'),
+        //password(defaultValue: 'badkitty', description: '', name: 'REGISTRY_PASSWORD'),
+        //string(defaultValue: 'quay.io/eric-cartman', description: '', name: 'REGISTRY_REPO'),
+        string(defaultValue: 'http://sonarqube.devops', description: '', name: "SONARQUBE_URL")
+    ]),
+    pipelineTriggers([])
+]) 
+
+
 dockerTemplate {
     mavenTemplate {
 	
@@ -15,17 +28,6 @@ dockerTemplate {
 
 
 
-/* properties([
-    parameters([
-        string(defaultValue: 'jenkinsci/jnlp-slave:2.62-alpine', description: '', name: 'JNLP_IMAGE'),
-        //string(defaultValue: 'quay.io', description: '', name: 'REGISTRY_SERVER'),
-        //string(defaultValue: 'eric-cartman', description: '', name: 'REGISTRY_USERNAME'),
-        //password(defaultValue: 'badkitty', description: '', name: 'REGISTRY_PASSWORD'),
-        //string(defaultValue: 'quay.io/eric-cartman', description: '', name: 'REGISTRY_REPO'),
-        string(defaultValue: 'http://sonarqube.devops', description: '', name: "SONARQUBE_URL")
-    ]),
-    pipelineTriggers([])
-]) */
 
 
 

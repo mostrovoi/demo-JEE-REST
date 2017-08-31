@@ -1,8 +1,17 @@
 #!groovy​
 pipeline {
 
-	//TODO: Change to none and specify agent per each step
-	agent any 
+ 	agent {
+ 		kubernetes {
+	      label 'jnlp-slave'
+	      containerTemplate {
+	      name 'maven'
+	      image 'maven:3.3.9-jdk-8-alpine'
+	      ttyEnabled true
+	      command 'cat'
+      	 }
+       }
+    }
 
 	tools {
 		maven 'Maven 3.5.0'
@@ -24,7 +33,9 @@ pipeline {
 		}
         stage ('Build')  {
         	steps {
-	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
+        		container("maven"){
+	    			sh "mvn clean package -Dmaven.test.failure.ignore=true"
+	   			}
 	   		}
 	    }
 
@@ -91,12 +102,6 @@ pipeline {
         } */
 
         stage ('Generació imatge docker') {
-	        agent {
-	        	docker { 
-	        			 image 'docker:stable-dind'
-	        			 args '--privileged' 
-	        	}
-	    	}
            steps {
 	           script {
 	           	  dir("src/assembly/docker/app") {

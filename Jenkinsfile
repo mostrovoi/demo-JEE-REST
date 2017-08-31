@@ -19,21 +19,21 @@ node('docker-maven') {
 	    }
 
 
-        stage ('Anàlisi de codi estàtic') {
+        /* stage ('Anàlisi de codi estàtic') {
              // requires SonarQube Scanner 2.8+      	
     		withSonarQubeEnv('SonarQubeServer') {
       			sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports"
    			}
-        }
+        } */
 
-        stage("Validació de SonarQube Gatekeeper") {
+        /* stage("Validació de SonarQube Gatekeeper") {
 			timeout(time: 5, unit: 'MINUTES') { 
     			def qG = waitForQualityGate()
     			if(qG.status != 'OK') {
     				error "Codi no acompleix els mínims de qualitat : ${qG.status}"
     			}
     		}
-        }
+        } */
 
        /* stage ('Generació Tag BUILD') {
             //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag

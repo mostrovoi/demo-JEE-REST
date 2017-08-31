@@ -1,5 +1,5 @@
 #!usr/bin/env groovy
-@Library('github.com/mostrovoi/pipeline-library@master')
+@Library('github.com/mostrovoi/pipeline-library@master') _
 
 /*properties([
     parameters([

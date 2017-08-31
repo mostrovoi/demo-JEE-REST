@@ -1,6 +1,7 @@
 #!usr/bin/env groovy
 import dockerTemplate
 import mavenTemplate
+@Library('github.com/mostrovoi/pipeline-library@master')
 properties([
     parameters([
         string(defaultValue: 'jenkinsci/jnlp-slave:2.62-alpine', description: '', name: 'JNLP_IMAGE'),

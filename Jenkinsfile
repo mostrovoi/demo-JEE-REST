@@ -14,9 +14,9 @@
 ]) */
 
 
-dockerTemplate(label: "docker") {
-    mavenTemplate( label: "maven") {
-	    node("maven-and-docker") {
+dockerTemplate  {
+    mavenTemplate {
+	    node  {
 
 			stage("Build") {
 				git 'https://github.com/mostrovoi/demo-canigo.git'

@@ -1,4 +1,5 @@
 #!usr/bin/env groovy
+
 properties([
     parameters([
         string(defaultValue: 'jenkinsci/jnlp-slave:2.62-alpine', description: '', name: 'JNLP_IMAGE'),
@@ -18,7 +19,7 @@ properties([
 def srcdir = 'github.com/mostrovoi/demo-canigo.git'
 
 podTemplate(label: 'build-pod', containers: [
-		containerTemplate(name: 'jnlp', image: JNLP_IMAGE, args: '${computer.jnlpmac} ${computer.name}'),
+		//containerTemplate(name: 'jnlp', image: JNLP_IMAGE, args: '${computer.jnlpmac} ${computer.name}'),
 		containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
 		containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')
 	],

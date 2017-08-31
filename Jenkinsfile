@@ -13,17 +13,6 @@ properties([
 ])
 
 
-podTemplate(label: 'build-pod', containers: [
-		containerTemplate(name: 'jnlp', image: JNLP_IMAGE, args: '${computer.jnlpmac} ${computer.name}'),
-		containerTemplate(name: 'docker', image: 'docker:1.11', ttyEnabled: true, command: 'cat'),
-		containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')
-	],
-  	volumes: [
-  	 	persistentVolumeClaim(mountPath: '/root/.m2/repository', claimName: 'maven-repo', readOnly: false)
-  		hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
-  	]
-) {
-
 dockerTemplate {
     mavenTemplate {
 	

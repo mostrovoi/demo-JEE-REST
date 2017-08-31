@@ -8,6 +8,7 @@ podTemplate(label: 'docker-maven', containers: [
 node('docker-maven') {
 
         stage ('Build')  {
+        	git 'https://github.com/mostrovoi/demo-canigo.git'
         	container("maven"){
 	    		sh "mvn clean package -Dmaven.test.failure.ignore=true"
 	   		}

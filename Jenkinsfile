@@ -14,7 +14,6 @@
 ]) */
 
 
-dockerTemplate  {
     mavenTemplate(label: 'maven-and-docker') {
 	    node('maven-and-docker')  {
 				stage("Build") {
@@ -109,6 +108,5 @@ dockerTemplate  {
 				echo "Per fer"
 		    }
 		}
-	 }
  }
 

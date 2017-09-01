@@ -13,7 +13,7 @@
     pipelineTriggers([])
 ]) */
 
-
+dockerTemplate {
     mavenTemplate(label: 'maven-and-docker') {
 	    node('maven-and-docker')  {
 	    	container(name: 'maven') {
@@ -109,6 +109,7 @@
 				echo "Per fer"
 		    }
 		}
-	}
- }
+      }
+   }
+}
 

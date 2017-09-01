@@ -16,15 +16,15 @@
 dockerTemplate {
     mavenTemplate(label: 'maven-and-docker') {
 	    node('maven-and-docker')  {
-	    	container(name: 'docker') {
-				stage("Build") {
-					git 'https://github.com/mostrovoi/demo-canigo.git'
-			        sh "mvn clean package -Dmaven.test.failure.ignore=true"			
-				}
-				
-				stage('Ciberseguretat: Fortify & ZAP') {
-			    	echo "Ciberseguretat: Fortify"
-			    }
+	    	
+			stage("Build") {
+				git 'https://github.com/mostrovoi/demo-canigo.git'
+		        sh "mvn clean package -Dmaven.test.failure.ignore=true"			
+			}
+			
+			stage('Ciberseguretat: Fortify & ZAP') {
+		    	echo "Ciberseguretat: Fortify"
+		    }
 
 
 		    /*stage ('Anàlisi de codi estàtic') {
@@ -108,7 +108,6 @@ dockerTemplate {
 			stage ('Smoke Test') {
 				echo "Per fer"
 		    }
-		}
       }
    }
 }

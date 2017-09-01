@@ -15,17 +15,16 @@
 
 
 dockerTemplate  {
-    mavenTemplate {
-	    node  {
-
-			stage("Build") {
-				git 'https://github.com/mostrovoi/demo-canigo.git'
-		        sh "mvn clean package -Dmaven.test.failure.ignore=true"			
-			}
-			
-			stage('Ciberseguretat: Fortify & ZAP') {
-		    	echo "Ciberseguretat: Fortify"
-		    }
+    mavenTemplate(label: 'maven-and-docker') {
+	    node('maven-and-docker')  {
+				stage("Build") {
+					git 'https://github.com/mostrovoi/demo-canigo.git'
+			        sh "mvn clean package -Dmaven.test.failure.ignore=true"			
+				}
+				
+				stage('Ciberseguretat: Fortify & ZAP') {
+			    	echo "Ciberseguretat: Fortify"
+			    }
 
 
 		    /*stage ('Anàlisi de codi estàtic') {

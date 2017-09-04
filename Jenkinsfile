@@ -13,11 +13,12 @@
 ]) */
 mavenTemplate(label: 'maven')  { 	
 		node('maven') {
-			stage("Build") {
-				git 'https://github.com/mostrovoi/demo-canigo.git'
-			    sh "mvn clean package -Dmaven.test.failure.ignore=true"			
+			container(name: 'maven') {
+				stage("Build") {
+					git 'https://github.com/mostrovoi/demo-canigo.git'
+				    sh "mvn clean package -Dmaven.test.failure.ignore=true"			
+				}
 			}
-
 
 			stage('Ciberseguretat: Fortify & ZAP') {
 				echo "Ciberseguretat: Fortify"

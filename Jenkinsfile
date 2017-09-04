@@ -80,7 +80,7 @@ clientsTemplate {
 					stage ('Desplegament INT') {
 						deployProject{
 							stagedProject = 'demo-canigo:latest'
-							resourceLocation = 'src/assembly/kubernetes/kubernetes.json'
+							resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
 							environment = 'staging'
 							//registry = localhost.localdomain:5000
 						}

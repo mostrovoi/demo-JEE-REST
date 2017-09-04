@@ -4,7 +4,6 @@ metadata:
   generation: 1
   name: demo-canigo
   namespace: dev
-  resourceVersion: "1260107"
 spec:
   rules:
   - host: bookstore.dev.matxa.es

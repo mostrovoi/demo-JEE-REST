@@ -105,5 +105,5 @@ node('jnlp-slave-with-java-build-tools')  {
 				echo "Per fer"
 		    }
 		 }
-     }
+
 

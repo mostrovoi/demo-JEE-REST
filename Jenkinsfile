@@ -11,15 +11,16 @@
     ]),
     pipelineTriggers([])
 ]) */
-mavenTemplate(label: 'maven')  { 	
+dockerTemplate {
+   mavenTemplate(label: 'maven-and-docker')  { 	
 		node('maven') {
-			//container(name: 'maven') {
+			container(name: 'maven') {
 				stage("Build") {
 					sh 'hostname'
 					git 'https://github.com/mostrovoi/demo-canigo.git'
 				    //sh "mvn clean package -Dmaven.test.failure.ignore=true"			
 				}
-			//}
+			}
 
 			stage('Ciberseguretat: Fortify & ZAP') {
 				echo "Ciberseguretat: Fortify"
@@ -66,8 +67,10 @@ mavenTemplate(label: 'maven')  {
 		    } */
 
 		stage ('Generació imatge docker') {
-		   	 dir("src/assembly/docker/app") {
-		   	      sh("docker build . -t gencat.azurecr.io/demo-canigo:latest")
+			container(name: 'docker') {
+			   	 dir("src/assembly/docker/app") {
+			   	      sh("docker build . -t gencat.azurecr.io/demo-canigo:latest")
+				}
 		   	}
 		}
 

@@ -85,8 +85,6 @@ clientsTemplate {
 						    environment = 'dev'
 							//registry = localhost.localdomain:5000
 						}
-						//def rc = readFile 'src/assembly/kubernetes/kubernetes.yaml'
-  						//kubernetesApply(file: rc, environment: 'dev')
 					}
 				}
 

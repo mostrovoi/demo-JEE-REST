@@ -30,8 +30,8 @@ spec:
   spec:
     containers:
     - name: demo-canigo
-      image: gencat.azurecr.io/demo-canigo:latest
-      imagePullPolicy: "IfNotPresent"
+      image: demo-canigo:latest
+      imagePullPolicy: "Always"
       ports:
       - containerPort: 80
 ---
@@ -50,7 +50,7 @@ spec:
     containers:
     - name: demo-canigo-postgres
       image: gencatcloud/postgres:9.5.3
-      imagePullPolicy: "IfNotPresent"
+      imagePullPolicy: "Always"
       ports:
       - containerPort: 5432
       env:

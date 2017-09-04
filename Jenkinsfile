@@ -66,11 +66,11 @@
 			        }
 			    } */
 
-					stage ('Generació imatge docker') {
-						container(name: 'docker') {
-							 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")
-						}						   	}
-					}
+			stage ('Generació imatge docker') {
+				container(name: 'docker') {
+					 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")
+				}						   	
+			}
 
 			stage ('Desplegament INT') {
 				echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"

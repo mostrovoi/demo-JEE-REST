@@ -79,12 +79,14 @@ clientsTemplate {
 				}
 				container(name: 'clients') {
 					stage ('Desplegament INT') {
-						deployProject{
-							stagedProject = 'demo-canigo:latest'
-							resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
-							environment = 'staging'
+						//deployProject{
+						//	stagedProject = 'demo-canigo:latest'
+						//	resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
+						//	environment = 'dev'
 							//registry = localhost.localdomain:5000
-						}
+						//}
+						def rc = readFile 'src/assembly/kubernetes/kubernetes.yaml'
+  						kubernetesApply(file: rc, environment: 'dev')
 					}
 				}
 

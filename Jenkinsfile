@@ -19,7 +19,8 @@ clientsTemplate {
 				container(name: 'maven') {
 					stage("Build") {
 						git 'https://github.com/mostrovoi/demo-canigo.git'
-					    sh "mvn clean package -Dmaven.test.failure.ignore=true"			
+					   // sh "mvn clean package -Dmaven.test.failure.ignore=true"			
+					 	sh "mvn clean package -DskipTests=true"
 					}
 				}
 

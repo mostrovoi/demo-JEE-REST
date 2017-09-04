@@ -70,7 +70,7 @@
 						container(name: 'docker') {
 							 sh "ls /home/jenkins/workspace"
 						   	 dir("src/assembly/docker/app") {
-						   	      sh("docker build . -t gencat.azurecr.io/demo-canigo:latest")
+						   	      sh("docker build -t gencat.azurecr.io/demo-canigo:latest .")
 							}
 					   	}
 					}

@@ -72,6 +72,12 @@
 				}						   	
 			}
 
+			stage ('Pujar imatge docker al nostre registre') {
+				container(name: 'docker') {
+					 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")
+				}						   	
+			}
+
 			stage ('Desplegament INT') {
 				echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
 				echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"

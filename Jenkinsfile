@@ -66,59 +66,57 @@ clientsTemplate {
 			        	sh("git config --unset credential.helper")
 			        }
 			    } */
-
-			stage ('Generació imatge docker') {
 				container(name: 'docker') {
-					 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")
-				}						   	
-			}
-
-			stage ('Pujar imatge docker al nostre registre') {
-				container(name: 'docker') {
-					 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")
-				}						   	
-			}
-
-			stage ('Desplegament INT') {
-				container(name: 'xx') {
-					deployProject{
-						stageProject = 'demo-canigo'
-						resourceLocation = 'target/classes/kubernetes.json'
-						environment = 'staging'
+					stage ('Generació imatge docker') {
+						 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")
+					}						   	
+				
+					//TODO: Externalitzar credencials
+					//stage ('Pujar imatge docker al nostre registre') {
+					//	sh("docker push gencat.azurecr.io/demo-canigo:latest")
+					//}						   	
+				}
+				container(name: 'clients') {
+					stage ('Desplegament INT') {
+						deployProject{
+							stageProject = 'demo-canigo'
+							resourceLocation = 'src/assembly/kubernetes/kubernetes.json'
+							environment = 'staging'
+							registry = localhost.localdomain:5000
+						}
 					}
 				}
-			}
 
-			stage ('Smoke Test INT') {
-			 	echo "Smoke test int"
-			}
-			stage ('Desplegament PRE') {
-				echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
-				echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
-			}
-			stage ('Smoke Test PRE') {
-				echo "Smoke Test de PRE"
-			}
+				stage ('Smoke Test INT') {
+				 	echo "Smoke test int"
+				}
+				stage ('Desplegament PRE') {
+					echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
+					echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
+				}
+				stage ('Smoke Test PRE') {
+					echo "Smoke Test de PRE"
+				}
 
-			stage ('Acceptance Test PRE') {
-			   	echo "Acceptance Test PRE"
-			}
+				stage ('Acceptance Test PRE') {
+				   	echo "Acceptance Test PRE"
+				}
 
-			stage ('Exploratory Test PRE') {
-				echo "Exploratory Test PRE"
-			}
+				stage ('Exploratory Test PRE') {
+					echo "Exploratory Test PRE"
+				}
 
-			stage ('Generació Tag DEFINITIU') {
-				echo "Generació Tag DEFINITIU"
-			}
+				stage ('Generació Tag DEFINITIU') {
+					echo "Generació Tag DEFINITIU"
+				}
 
-			stage ('Desplegament PRO') {
-				echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
-				echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
-			}   
-			stage ('Smoke Test') {
-				echo "Per fer"
-			}
+				stage ('Desplegament PRO') {
+					echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+					echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+				}   
+				stage ('Smoke Test') {
+					echo "Per fer"
+				}
 		  }  
 	   }
 	}

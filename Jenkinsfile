@@ -61,10 +61,9 @@ node('jnlp-slave-with-java-build-tools')  {
 	        	sh("git config --unset credential.helper")
 	        }
 	    } */
-	}
 
 	stage ('Generació imatge docker') {
-	   	  dir("src/assembly/docker/app") {
+	   	 dir("src/assembly/docker/app") {
 	   	      sh("docker build . -t gencat.azurecr.io/demo-canigo:latest")
 	   	}
 	}

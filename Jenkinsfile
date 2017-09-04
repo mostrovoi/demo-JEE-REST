@@ -1,5 +1,5 @@
 #!usr/bin/env groovy
-@Library('github.com/mostrovoi/pipeline-library@master') _
+//@Library('github.com/mostrovoi/pipeline-library@master') _
 
 /*properties([
     parameters([
@@ -12,20 +12,15 @@
     ]),
     pipelineTriggers([])
 ]) */
-
-dockerTemplate {
-    mavenTemplate(label: 'maven-and-docker') {
-	    node('maven-and-docker')  {
-	    	
+node('jnlp-slave-with-java-build-tools')  { 	
 			stage("Build") {
 				git 'https://github.com/mostrovoi/demo-canigo.git'
 		        sh "mvn clean package -Dmaven.test.failure.ignore=true"			
 			}
-			
+
 			stage('Ciberseguretat: Fortify & ZAP') {
 		    	echo "Ciberseguretat: Fortify"
 		    }
-
 
 		    /*stage ('Anàlisi de codi estàtic') {
 		    	container("maven") {
@@ -66,6 +61,7 @@ dockerTemplate {
 			        	sh("git config --unset credential.helper")
 			        }
 		        } */
+			}
 
 		    stage ('Generació imatge docker') {
 		       	  dir("src/assembly/docker/app") {
@@ -108,7 +104,6 @@ dockerTemplate {
 			stage ('Smoke Test') {
 				echo "Per fer"
 		    }
-      }
-   }
-}
+		 }
+     }
 

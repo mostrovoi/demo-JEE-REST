@@ -1,6 +1,6 @@
 #!usr/bin/env groovy
 //@Library('github.com/mostrovoi/pipeline-library@master') _
-
+@Library ('github.com/fabric8io/fabric8-pipeline-library@master') _
 /*properties([
     parameters([
         string(defaultValue: 'jenkinsci/jnlp-slave:2.62-alpine', description: '', name: 'JNLP_IMAGE'),
@@ -12,7 +12,7 @@
     ]),
     pipelineTriggers([])
 ]) */
-node('jnlp-slave-with-java-build-tools')  { 	
+mavenNode(mavenImage: 'maven:3.3.9-jdk-7')  { 	
 	stage("Build") {
 		git 'https://github.com/mostrovoi/demo-canigo.git'
 	    sh "mvn clean package -Dmaven.test.failure.ignore=true"			

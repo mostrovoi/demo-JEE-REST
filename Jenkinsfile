@@ -82,7 +82,7 @@ clientsTemplate {
 							stageProject = 'demo-canigo'
 							resourceLocation = 'src/assembly/kubernetes/kubernetes.json'
 							environment = 'staging'
-							registry = localhost.localdomain:5000
+							//registry = localhost.localdomain:5000
 						}
 					}
 				}

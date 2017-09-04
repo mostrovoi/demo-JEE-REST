@@ -1,6 +1,5 @@
 #!usr/bin/env groovy
-//@Library('github.com/mostrovoi/pipeline-library@master') _
-@Library ('github.com/fabric8io/fabric8-pipeline-library@master') _
+@Library('github.com/mostrovoi/pipeline-library@master') _
 /*properties([
     parameters([
         string(defaultValue: 'jenkinsci/jnlp-slave:2.62-alpine', description: '', name: 'JNLP_IMAGE'),

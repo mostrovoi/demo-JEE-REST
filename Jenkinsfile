@@ -13,12 +13,11 @@
 ]) */
 dockerTemplate {
    mavenTemplate(label: 'maven-and-docker')  { 	
-		node('maven') {
+		node('maven-and-docker') {
 			container(name: 'maven') {
 				stage("Build") {
-					sh 'hostname'
 					git 'https://github.com/mostrovoi/demo-canigo.git'
-				    //sh "mvn clean package -Dmaven.test.failure.ignore=true"			
+				    sh "mvn clean package -Dmaven.test.failure.ignore=true"			
 				}
 			}
 

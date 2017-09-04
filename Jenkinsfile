@@ -11,7 +11,8 @@
     ]),
     pipelineTriggers([])
 ]) */
-//releaseTemplate {
+
+clientsTemplate {
 	dockerTemplate {
 	   mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
 			node('maven-and-docker-and-kubectl') {
@@ -79,8 +80,13 @@
 			}
 
 			stage ('Desplegament INT') {
-				echo "-----------------> Inici: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
-				echo "-----------------> FI: EFECTUANT DESPLEGAMENT AUTOMÀTIC A INT <-----------------"
+				container(name: 'xx') {
+					deployProject{
+						stageProject = 'demo-canigo'
+						resourceLocation = 'target/classes/kubernetes.json'
+						environment = 'staging'
+					}
+				}
 			}
 
 			stage ('Smoke Test INT') {
@@ -115,7 +121,7 @@
 			}
 		  }  
 	   }
-//	}
+	}
 }
 
 

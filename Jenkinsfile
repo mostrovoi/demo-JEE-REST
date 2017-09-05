@@ -86,7 +86,7 @@ clientsTemplate {
 							stagedProject = 'demo-canigo:latest'
 						    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
 						    environment = 'dev'
-							registry = gencat.azurecr.io
+							registry = 'gencat.azurecr.io'
 						}
 					}
 				}

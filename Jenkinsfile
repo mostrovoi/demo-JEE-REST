@@ -27,7 +27,7 @@ clientsTemplate {
 					}
 
 					stage ('Anàlisi de codi estàtic') {
-							withSonarQubeEnv("SonarQubeServer") {
+							withSonarQubeEnv {
 							    sh "mvn sonar:sonar -Dsonar.dynamic=reuseReports" 
 						    }
 					} 

@@ -72,9 +72,10 @@ clientsTemplate {
 						 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")
 					}						   	
 				
+					//TODO: Externalitzar el nom del registre
 					stage ('Pujar imatge docker al nostre registre') {
 						withCredentials([usernamePassword(credentialsId: 'azureRegistryID', passwordVariable: 'REGISTRY_PASSWORD', usernameVariable: 'REGISTRY_USERNAME')]) { 
-						  sh("docker login gencat.azurecr.io -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD}")
+						  sh("docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} gencat.azurecr.io")
 						  sh("docker push gencat.azurecr.io/demo-canigo:latest")
 						}
 					}						   	

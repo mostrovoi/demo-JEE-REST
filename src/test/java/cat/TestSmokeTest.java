@@ -21,25 +21,20 @@ public class TestSmokeTest {
 
     @BeforeClass
     public void testSetUp() throws MalformedURLException {
-
         DesiredCapabilities capability = DesiredCapabilities.firefox();
-        capability.setBrowserName("firefox");
-        
+        capability.setBrowserName("firefox");       
         driver = new RemoteWebDriver(new URL("http://selenium-selenium-hub.devops:4444/wd/hub"), capability);
     }
 
     @Test
     public void verifySpringBootDemoTittle() {
-        
-        driver.get(appURL);
-        
+        driver.get(appURL);    
         Assert.assertEquals(driver.getTitle(), "springbootdemo");
     }
 
     @AfterClass
     public void tearDown() {
-        driver.quit();
-       
+        driver.quit();  
     }
 
 }

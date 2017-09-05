@@ -26,11 +26,12 @@ clientsTemplate {
 				
 					stage('Ciberseguretat: CESICAT') {
 						echo "Ciberseguretat: Fortify"
+						echo "Ciberseguretat: ZAP"
 					}
 
 					stage ('Anàlisi de codi estàtic') {
 						withSonarQubeEnv("SonarQubeServer") {
-						    sh "mvn sonar:sonar -Dsonar.dynamic=reuseReports" 
+						    sh "mvn sonar:sonar -Dsonar.dynamic=reuseReports -Dsonar.host.url=$SONAR_HOST_URL" 
 					    }
 					} 
 

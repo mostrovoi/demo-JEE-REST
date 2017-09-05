@@ -30,7 +30,7 @@ public class TestAutoTest {
         DesiredCapabilities capability = DesiredCapabilities.firefox();
         capability.setBrowserName("firefox");
 
-        driver = new RemoteWebDriver(new URL("http://selenium-selenium.devops/wd/hub"), capability);
+        driver = new RemoteWebDriver(new URL("http://selenium-selenium-hub.devops:4444/wd/hub"), capability);
     }
 
     @Test(priority = 0)

@@ -97,8 +97,11 @@ clientsTemplate {
 					}
 				}
 
-				stage ('Smoke Test INT') {
-				 	echo "Smoke test int"
+				container(name: 'maven') {
+					stage ('Smoke Test INT') {
+					 	//TODO: Maven and run selenium
+					 	echo "Smoke test int"
+					}
 				}
 				stage ('Desplegament PRE') {
 					echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"

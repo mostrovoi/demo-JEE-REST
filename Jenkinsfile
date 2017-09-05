@@ -74,7 +74,7 @@ clientsTemplate {
 				
 					stage ('Pujar imatge docker al nostre registre') {
 						withCredentials([usernamePassword(credentialsId: 'azureRegistryID', passwordVariable: 'REGISTRY_PASSWORD', usernameVariable: 'REGISTRY_USERNAME')]) { 
-						  sh("docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD}")
+						  sh("docker login gencat.azurecr.io -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD}")
 						  sh("docker push gencat.azurecr.io/demo-canigo:latest")
 						}
 					}						   	
@@ -85,7 +85,7 @@ clientsTemplate {
 							stagedProject = 'demo-canigo:latest'
 						    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
 						    environment = 'dev'
-							//registry = localhost.localdomain:5000
+							registry = gencat.azurecr.io
 						}
 					}
 				}

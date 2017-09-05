@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: demo-canigo-postgres
@@ -6,28 +6,28 @@ metadata:
 spec:
   replicas: 1
   template:
-	metadata:
-  	labels:
-   	 app: demo-canigo-postgres
-	spec:
-  	containers:
-  	- name: demo-canigo-postgres
-    	image: gencatcloud/postgres:9.5.3
-    	imagePullPolicy: "IfNotPresent"
-    	ports:
-    	- containerPort: 5432
-    	env:
-    	- name: POSTGRES_USER
-      	value: demospringboot
-    	- name: POSTGRES_PASSWORD
-      	value: password
-    	- name: PGDATA
-      	value: /var/lib/postgresql/data/pgdata
-    	volumeMounts:
-       	- mountPath: /var/lib/postgresql/data
-         	name: demo-canigo-postgredb
-  	volumes:
-    	- name: demo-canigo-postgredb
+    metadata:
+      labels:
+        app: demo-canigo-postgres
+    spec:
+      containers:
+      - name: demo-canigo-postgres
+        image: gencatcloud/postgres:9.5.3
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: demospringboot
+        - name: POSTGRES_PASSWORD
+          value: password
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: demo-canigo-postgredb
+      volumes:
+      - name: demo-canigo-postgredb
         persistentVolumeClaim:
-          claimName: demo-canigo-pvc
+           claimName: demo-canigo-pvc
 

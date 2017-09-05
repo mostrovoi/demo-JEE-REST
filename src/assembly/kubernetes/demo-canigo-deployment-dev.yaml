@@ -6,14 +6,13 @@ metadata:
 spec:
   replicas: 1
   template:
-        metadata:
-  	labels:
-   	 app: demo-canigo
-	spec:
-  	containers:
-  	- name: demo-canigo
-      image: gencat.azurecr.io/demo-canigo:latest
-      imagePullPolicy: "IfNotPresent"
-    	ports:
-    	- containerPort: 80
-
+    metadata:
+      labels:
+        app: demo-canigo
+    spec:
+      containers:
+      - name: demo-canigo
+        image: gencat.azurecr.io/demo-canigo:latest
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 80

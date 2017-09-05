@@ -41,7 +41,8 @@ clientsTemplate {
 							if(qG.status != 'OK') {
 								error "Codi no acompleix els mínims de qualitat : ${qG.status}"
 						}
-					}
+					 }
+				   }
 				} 
 
 			    //TODO: Externalitzar el nom del registre i logica a funcions externes
@@ -126,6 +127,7 @@ clientsTemplate {
 				stage ('Smoke Test') {
 					echo "Per fer"
 				} 
+	  		}
 	   }
 	}
 }

@@ -125,8 +125,7 @@ clientsTemplate {
 				}   
 				stage ('Smoke Test') {
 					echo "Per fer"
-				}
-		  }  
+				} 
 	   }
 	}
 }

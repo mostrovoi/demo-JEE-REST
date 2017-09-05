@@ -40,9 +40,9 @@ clientsTemplate {
 						timeout(time: 5, unit: 'MINUTES') { 
 							def qG = waitForQualityGate()
 							if(qG.status == 'OK')
-							  echo "Codi acompleix els mínims de qualitat. Enhorabona!"
+							  echo "SONAR: Codi acompleix els mínims de qualitat. Enhorabona!"
 							else
-								error "Codi no acompleix els mínims de qualitat : ${qG.status}"
+								error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
 					 }
 				   }
 				} 

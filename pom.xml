@@ -134,13 +134,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- The HikariCP Java Agent is disabled by default, as it is experimental
-          <dependency>
-              <groupId>com.zaxxer</groupId>
-                  <artifactId>HikariCP-agent</artifactId>
-                      <version>${HikariCP.version}</version>
-                      </dependency>
-                  -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -239,7 +232,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
-            <!--      <version>${hibernate.version}</version> -->
             <exclusions>
                 <exclusion>
                     <artifactId>ehcache-core</artifactId>
@@ -348,7 +340,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-data</artifactId>
         </dependency>
-      <!-- Selenium  && testng
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
@@ -359,7 +350,6 @@
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
         </dependency>
-       reporting -->
     </dependencies>
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>

@@ -5,7 +5,7 @@ metadata:
     volume.alpha.kubernetes.io/storage-class: default
     volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/azure-disk
   labels:
-    app: demo-canigo-postgres
+    app: postgres
   name: demo-canigo-pvc
   namespace: dev
 spec:

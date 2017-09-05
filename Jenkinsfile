@@ -19,60 +19,60 @@ clientsTemplate {
 				container(name: 'maven') {
 					stage("Build") {
 						git 'https://github.com/mostrovoi/demo-canigo.git'
-					   // sh "mvn clean package -Dmaven.test.failure.ignore=true"			
-					 	sh "mvn clean package -DskipTests=true"
+					    sh "mvn clean package -Dmaven.test.failure.ignore=true"			
 					}
-				}
-
-				stage('Ciberseguretat: Fortify & ZAP') {
-					echo "Ciberseguretat: Fortify"
-				}
-
-				/*stage ('Anàlisi de codi estàtic') {
-					container("maven") {
-						sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.dynamic=reuseReports -Dsonar.host.url=${SONARQUBE_URL}" 
+				
+					stage('Ciberseguretat: Fortify & ZAP') {
+						echo "Ciberseguretat: Fortify"
 					}
-				} 
 
-				stage("Validació de SonarQube Gatekeeper") {
-					timeout(time: 5, unit: 'MINUTES') { 
-						def qG = waitForQualityGate()
-						if(qG.status != 'OK') {
-							error "Codi no acompleix els mínims de qualitat : ${qG.status}"
+					stage ('Anàlisi de codi estàtic') {
+							withSonarQubeEnv("SonarQubeServer") {
+							    sh "mvn sonar:sonar -Dsonar.dynamic=reuseReports" 
+						    }
+					} 
+
+					stage("Validació de SonarQube Gatekeeper") {
+						timeout(time: 5, unit: 'MINUTES') { 
+							def qG = waitForQualityGate()
+							if(qG.status != 'OK') {
+								error "Codi no acompleix els mínims de qualitat : ${qG.status}"
+							}
 						}
-					}
-				} */
+					} 
 
+					//TODO: Moure a funcio
+				   stage ('Generació Tag BUILD') {
+				        //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
+				       def pom = readMavenPom file: 'pom.xml'
+				  	   //Si la versió es SNAPSHOT o ja existeix tirar-la enrera
+				       if(pom == null || pom.version == null || pom.version.contains("SNAPSHOT"))
+				           error "El tag no pot ser buit ni snapshot"
 
-			   /* stage ('Generació Tag BUILD') {
-			        //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
-			       def pom = readMavenPom file: 'pom.xml'
-			  	   //Si la versió es SNAPSHOT o ja existeix tirar-la enrera
-			       if(pom == null || pom.version == null || pom.version.contains("SNAPSHOT"))
-			           error "El tag no pot ser buit ni snapshot"
-
-			  	   try {
-			           sh("git tag -a ${pom.version} -m 'Jenkins'")
-			           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-			                sh("git config credential.username ${env.GIT_USERNAME}")
-			                sh("git config credential.helper '!echo password=\$GIT_PASSWORD; echo'")
-			                sh("GIT_ASKPASS=true git push origin --tags")
-			           }
-			        }
-			        catch (Exception ex) {
-			        	error "Error generant el tag."
-			        }
-			        finally {
-			        	sh("git config --unset credential.username")
-			        	sh("git config --unset credential.helper")
-			        }
-			    } */
+				  	   try {
+				           sh("git tag -a ${pom.version} -m 'Jenkins'")
+				           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+				                sh("git config credential.username ${env.GIT_USERNAME}")
+				                sh("git config credential.helper '!echo password=\$GIT_PASSWORD; echo'")
+				                sh("GIT_ASKPASS=true git push origin --tags")
+				           }
+				        }
+				        catch (Exception ex) {
+				        	error "Error generant el tag."
+				        }
+				        finally {
+				        	sh("git config --unset credential.username")
+				        	sh("git config --unset credential.helper")
+				        }
+				    } 
+				  }
+			    //TODO: Externalitzar el nom del registre i/o funcions externes
 				container(name: 'docker') {
 					stage ('Generació imatge docker') {
 						 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")
 					}						   	
 				
-					//TODO: Externalitzar el nom del registre
+				
 					stage ('Pujar imatge docker al nostre registre') {
 						withCredentials([usernamePassword(credentialsId: 'azureRegistryID', passwordVariable: 'REGISTRY_PASSWORD', usernameVariable: 'REGISTRY_USERNAME')]) { 
 						  sh("docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} gencat.azurecr.io")

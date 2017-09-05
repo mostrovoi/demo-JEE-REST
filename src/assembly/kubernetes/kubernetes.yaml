@@ -1,35 +1,17 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  annotations:
-    volume.alpha.kubernetes.io/storage-class: default
-    volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/azure-disk
-  labels:
-    app: demo-canigo-postgres
-  name: demo-canigo-pvc
-  namespace: dev
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 3Gi
-  storageClassName: default
----
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: demo-canigo-postgres
+  name: postgres
   namespace: dev
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: demo-canigo-postgres
+        app: postgres
     spec:
       containers:
-      - name: demo-canigo-postgres
+      - name: postgres
         image: gencatcloud/postgres:9.5
         imagePullPolicy: "Always"
         ports:
@@ -74,17 +56,16 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: demo-canigo-postgres
-  name: demo-canigo-postgres
+    app: postgres
+  name: postgres
   namespace: dev
 spec:
   ports:
-  - name: postgresql
+  - protocol: TCP
     port: 5432
-    protocol: TCP
-    targetPort: postgresql
+    targetPort: 5432
   selector:
-    app: demo-canigo-postgres
+    app: postgres
   type: ClusterIP
 ---
 apiVersion: v1
@@ -99,7 +80,7 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
   selector:
     app: demo-canigo
   type: ClusterIP

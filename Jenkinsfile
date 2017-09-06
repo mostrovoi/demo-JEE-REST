@@ -102,24 +102,28 @@ clientsTemplate {
 
 				container(name: 'maven') {
 					stage ('Smoke Test INT') {
-					 	//TODO: Maven and run selenium
-					 	echo "Smoke test int"
+					 	  sh "mvn verify -PsmokeTest"
 					}
-				}
-				stage ('Desplegament PRE') {
-					deployProject{
-						stagedProject = 'demo-canigo:latest'
-					    resourceLocation = 'src/assembly/kubernetes/kubernetes-pre.yaml'
-					    environment = 'pre'
-						registry = 'gencat.azurecr.io'
-					}
-				}
-				stage ('Smoke Test PRE') {
-					echo "Smoke Test de PRE"
 				}
 
-				stage ('Acceptance Test PRE') {
-				   	echo "Acceptance Test PRE"
+				container(name: 'clients') {
+					stage ('Desplegament PRE') {
+						deployProject{
+							stagedProject = 'demo-canigo:latest'
+						    resourceLocation = 'src/assembly/kubernetes/kubernetes-pre.yaml'
+						    environment = 'pre'
+							registry = 'gencat.azurecr.io'
+						}
+					}
+				}
+
+				container(name: 'maven') {
+					stage ('Smoke Test PRE') {
+						sh "mvn verify -PsmokeTest"
+					}
+					stage ('Acceptance Test PRE') {
+					 	sh "mvn verify"
+					}
 				}
 
 				stage ('Exploratory Test PRE') {
@@ -131,18 +135,27 @@ clientsTemplate {
 				}
 
 				//TODO: Moure fora del node (flyweight executor) fer stash/untash
-				stage ('Desplegament PRO') {
-					input 'Vols pujar a pro?'
-					deployProject{
-						stagedProject = 'demo-canigo:latest'
-					    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
-					    environment = 'pro'
-						registry = 'gencat.azurecr.io'
+				container(name: 'clients') {
+					stage ('Desplegament PRO') {
+						input 'Vols promocionar el build a pro?'
+						deployProject{
+							stagedProject = 'demo-canigo:latest'
+						    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
+						    environment = 'pro'
+							registry = 'gencat.azurecr.io'
+						}
+					}   
+				 }
+
+				container(name: 'maven') {
+					stage ('Smoke Test PRO') {
+						sh "mvn verify -PsmokeTest"
 					}
-				}   
-				stage ('Smoke Test') {
-					echo "Per fer"
-				} 
+					stage ('Acceptance Test PRE') {
+					 	sh "mvn verify"
+					}
+				}
+
 	  		}
 	   }
 	}

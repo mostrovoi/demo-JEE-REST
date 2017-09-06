@@ -1,0 +1,39 @@
+package loadtesting;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
+
+@Listeners(ListenerTestHelper.class)
+public class SmokeTestIT {
+
+    private WebDriver driver;
+    String appURL = "http://bookstore.dev.matxa.es";
+
+    @BeforeClass
+    public void testSetUp() throws MalformedURLException {
+        DesiredCapabilities capability = DesiredCapabilities.firefox();
+        capability.setBrowserName("firefox");       
+        driver = new RemoteWebDriver(new URL("http://selenium-selenium-hub.devops:4444/wd/hub"), capability);
+    }
+
+    @Test
+    public void verifySpringBootDemoTittle() {
+        driver.get(appURL);    
+        Assert.assertEquals(driver.getTitle(), "springbootdemo");
+    }
+
+    @AfterClass
+    public void tearDown() {
+        driver.quit();  
+    }
+
+}

@@ -135,7 +135,7 @@ clientsTemplate {
 					input 'Vols pujar a pro?'
 					deployProject{
 						stagedProject = 'demo-canigo:latest'
-					    resourceLocation = 'src/assembly/kubernetes/kubernetes-pro.yaml'
+					    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
 					    environment = 'pro'
 						registry = 'gencat.azurecr.io'
 					}

@@ -87,7 +87,7 @@ clientsTemplate {
 			        }
 			    } 
 			  } */
-
+			  	//TODO: Externalitzar valors
 				container(name: 'clients') {
 					stage ('Desplegament INT') {
 						deployProject{
@@ -106,8 +106,12 @@ clientsTemplate {
 					}
 				}
 				stage ('Desplegament PRE') {
-					echo "-----------------> Inici: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
-					echo "-----------------> Fi: EFECTUANT PETICIÓ DESPLEGAMENT A PRE <-----------------"
+						deployProject{
+							stagedProject = 'demo-canigo:latest'
+						    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
+						    environment = 'pre'
+							registry = 'gencat.azurecr.io'
+						}
 				}
 				stage ('Smoke Test PRE') {
 					echo "Smoke Test de PRE"
@@ -125,9 +129,15 @@ clientsTemplate {
 					echo "Generació Tag DEFINITIU"
 				}
 
+				//TODO: Moure fora del node (flyweight executor) fer stash/untash
 				stage ('Desplegament PRO') {
-					echo "-----------------> Inici: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
-					echo "-----------------> Fi: EFECTUANT PETICIÖ DESPLEGAMENT A PRO <-----------------"
+					input 'Vols pujar a pro?'
+					deployProject{
+						stagedProject = 'demo-canigo:latest'
+					    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
+					    environment = 'pro'
+						registry = 'gencat.azurecr.io'
+					}
 				}   
 				stage ('Smoke Test') {
 					echo "Per fer"

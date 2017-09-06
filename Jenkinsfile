@@ -1,4 +1,4 @@
-#!usr/bin/env groovy
+#!usr/bin/groovy
 @Library('github.com/mostrovoi/pipeline-library@master') _
 /*properties([
     parameters([
@@ -20,6 +20,7 @@ clientsTemplate {
 					stage("Checkout") {
 						git 'https://github.com/mostrovoi/demo-canigo.git'
 					}
+					
 					stage("Build") {
 					    sh "mvn clean package -Dmaven.test.failure.ignore=true"			
 					}
@@ -92,7 +93,7 @@ clientsTemplate {
 					stage ('Desplegament INT') {
 						deployProject{
 							stagedProject = 'demo-canigo:latest'
-						    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
+						    resourceLocation = 'src/assembly/kubernetes/kubernetes-dev.yaml'
 						    environment = 'dev'
 							registry = 'gencat.azurecr.io'
 						}
@@ -106,12 +107,12 @@ clientsTemplate {
 					}
 				}
 				stage ('Desplegament PRE') {
-						deployProject{
-							stagedProject = 'demo-canigo:latest'
-						    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
-						    environment = 'pre'
-							registry = 'gencat.azurecr.io'
-						}
+					deployProject{
+						stagedProject = 'demo-canigo:latest'
+					    resourceLocation = 'src/assembly/kubernetes/kubernetes-pre.yaml'
+					    environment = 'pre'
+						registry = 'gencat.azurecr.io'
+					}
 				}
 				stage ('Smoke Test PRE') {
 					echo "Smoke Test de PRE"
@@ -134,7 +135,7 @@ clientsTemplate {
 					input 'Vols pujar a pro?'
 					deployProject{
 						stagedProject = 'demo-canigo:latest'
-					    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'
+					    resourceLocation = 'src/assembly/kubernetes/kubernetes-pro.yaml'
 					    environment = 'pro'
 						registry = 'gencat.azurecr.io'
 					}

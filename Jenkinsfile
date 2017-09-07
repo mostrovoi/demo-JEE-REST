@@ -56,7 +56,7 @@ clientsTemplate {
 				
 				
 					stage ('Pujar imatge docker al nostre registre') {
-						withCredentials([usernamePassword(credentialsId: 'azureRegistryID', passwordVariable: 'REGISTRY_PASSWORD', usernameVariable: 'REGISTRY_USERNAME')]) { 
+						withCredentials([usernamePassword(credentialsId: 'azureRegistryId', passwordVariable: 'REGISTRY_PASSWORD', usernameVariable: 'REGISTRY_USERNAME')]) { 
 						  sh("docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} gencat.azurecr.io")
 						  sh("docker push gencat.azurecr.io/demo-canigo:latest")
 						}

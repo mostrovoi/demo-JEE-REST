@@ -102,7 +102,7 @@ clientsTemplate {
 
 				container(name: 'maven') {
 					stage ('Smoke Test INT') {
-					 	  sh "mvn verify -PsmokeTest"
+					 	  sh "mvn verify -PsmokeTest,dev"
 					}
 				}
 
@@ -119,7 +119,7 @@ clientsTemplate {
 
 				container(name: 'maven') {
 					stage ('Smoke Test PRE') {
-						sh "mvn verify -PsmokeTest"
+						sh "mvn verify -PsmokeTest,dev"
 					}
 					stage ('Acceptance Test PRE') {
 					 	sh "mvn verify"
@@ -147,7 +147,7 @@ clientsTemplate {
 
 				container(name: 'maven') {
 					stage ('Smoke Test PRO') {
-						sh "mvn verify -PsmokeTest"
+						sh "mvn verify -PsmokeTest,dev"
 					}
 					stage ('Acceptance Test PRE') {
 					 	sh "mvn verify"

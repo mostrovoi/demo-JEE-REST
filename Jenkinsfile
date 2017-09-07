@@ -124,16 +124,14 @@ clientsTemplate {
 					stage ('Acceptance Test PRE') {
 					 	sh "mvn verify"
 					}
-				}
+					stage ('Exploratory Test PRE') {
+						echo "Exploratory Test PRE"
+					}
 
-				stage ('Exploratory Test PRE') {
-					echo "Exploratory Test PRE"
+					stage ('Generació Tag DEFINITIU') {
+						echo "Generació Tag DEFINITIU"
+					}
 				}
-
-				stage ('Generació Tag DEFINITIU') {
-					echo "Generació Tag DEFINITIU"
-				}
-
 				//TODO: Moure fora del node (flyweight executor) fer stash/untash
 				container(name: 'clients') {
 					stage ('Desplegament PRO') {

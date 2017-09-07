@@ -83,7 +83,7 @@ items:
     selector:
       app: demo-canigo
     type: ClusterIP
-  apiVersion: extensions/v1beta1
+- apiVersion: extensions/v1beta1
   kind: Ingress
   metadata:
     generation: 1

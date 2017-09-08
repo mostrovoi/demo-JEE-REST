@@ -17,7 +17,7 @@ clientsTemplate {
 	  performanceTemplate {
 	   mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
 			node('maven-and-docker-and-kubectl') {
-				container(name: 'maven') {
+			/*	container(name: 'maven') {
 					stage("Checkout") {
 						git 'https://github.com/mostrovoi/demo-canigo.git'
 					}
@@ -46,7 +46,7 @@ clientsTemplate {
 							else
 								error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
 					 }
-				   }
+				   } 
 				} 
 
 			    //TODO: Externalitzar el nom del registre i logica a funcions externes
@@ -65,7 +65,7 @@ clientsTemplate {
 				}
 
 				//TODO: Moure a funcio parametritzable
-			    /*stage ('Generació Tag BUILD') {
+			    stage ('Generació Tag BUILD') {
 			        //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
 			       def pom = readMavenPom file: 'pom.xml'
 			  	   //Si la versió es SNAPSHOT o ja existeix tirar-la enrera
@@ -90,7 +90,7 @@ clientsTemplate {
 			    } */
 			  
 			  	//TODO: Externalitzar valors
-				container(name: 'clients') {
+			/*	container(name: 'clients') {
 					stage ('Desplegament INT') {
 						deployProject{
 							stagedProject = 'demo-canigo:latest'
@@ -125,10 +125,10 @@ clientsTemplate {
 					stage ('Acceptance Test PRE') {
 					 	sh "mvn verify"
 					}
-				}
+				} */
 				container(name: 'performance') {
 					stage('Capacity TEST PRE') {
-       					 bzt "src/test/jmeter/simple-assert.yml -report -o settings.artifacts-dir=artifacts"
+       					 sh "bzt src/test/jmeter/simple-assert.yml -report -o settings.artifacts-dir=artifacts"
 					}
 					stage ('Exploratory Test PRE') {
 						echo "Exploratory Test PRE"

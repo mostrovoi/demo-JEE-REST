@@ -128,7 +128,7 @@ clientsTemplate {
 				} */
 				container(name: 'performance') {
 					stage('Capacity TEST PRE') {
-       					 sh "bzt src/test/jmeter/simple-assert.yml -report -o settings.artifacts-dir=artifacts"
+       					 sh "bzt workspace/demo-canigo/src/test/jmeter/simple-assert.yml -report -o settings.artifacts-dir=artifacts"
 					}
 					stage ('Exploratory Test PRE') {
 						echo "Exploratory Test PRE"

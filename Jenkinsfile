@@ -14,6 +14,7 @@
 
 clientsTemplate {
 	dockerTemplate {
+	  performanceTemplate {
 	   mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
 			node('maven-and-docker-and-kubectl') {
 				container(name: 'maven') {
@@ -64,7 +65,7 @@ clientsTemplate {
 				}
 
 				//TODO: Moure a funcio parametritzable
-			   /* stage ('Generació Tag BUILD') {
+			    /*stage ('Generació Tag BUILD') {
 			        //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
 			       def pom = readMavenPom file: 'pom.xml'
 			  	   //Si la versió es SNAPSHOT o ja existeix tirar-la enrera
@@ -86,8 +87,8 @@ clientsTemplate {
 			        	sh("git config --unset credential.username")
 			        	sh("git config --unset credential.helper")
 			        }
-			    } 
-			  } */
+			    } */
+			  
 			  	//TODO: Externalitzar valors
 				container(name: 'clients') {
 					stage ('Desplegament INT') {
@@ -124,14 +125,17 @@ clientsTemplate {
 					stage ('Acceptance Test PRE') {
 					 	sh "mvn verify"
 					}
+				}
+				container(name: 'performance') {
+					stage('Capacity TEST PRE') {
+       					 bzt "src/test/jmeter/simple-assert.yml -report -o settings.artifacts-dir=artifacts"
+					}
 					stage ('Exploratory Test PRE') {
 						echo "Exploratory Test PRE"
 					}
 
-					stage ('Generació Tag DEFINITIU') {
-						echo "Generació Tag DEFINITIU"
-					}
 				}
+
 				//TODO: Moure fora del node (flyweight executor) fer stash/untash
 				container(name: 'clients') {
 					stage ('Desplegament PRO') {
@@ -145,16 +149,23 @@ clientsTemplate {
 					}   
 				 }
 
+
+				stage ('Generació Tag DEFINITIU') {
+					echo "Generació Tag DEFINITIU"
+				}
+					
 				container(name: 'maven') {
 					stage ('Smoke Test PRO') {
 						sh "mvn verify -PsmokeTest,dev"
 					}
-					stage ('Acceptance Test PRE') {
-					 	sh "mvn verify"
-					}
 				}
 
-	  		}
+				stage("post-proc") {
+					archiveArtifacts artifacts: 'artifacts/*.log'
+					junit 'artifacts/xunit.xml'
+				}
+	  		 }
+	  	  }
 	   }
 	}
 }

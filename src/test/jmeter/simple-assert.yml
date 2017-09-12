@@ -6,15 +6,15 @@ execution:
 
 reporting:
 - module: final-stats
-    summary: true
-    percentiles: true
-    failed-labels: false
-    test-duration: true
-    dump-xml: stats.xml
+  summary: true
+  percentiles: true
+  failed-labels: false
+  test-duration: true
+  dump-xml: stats.xml
 - module: passfail
-    criteria:
-    - avg-rt of IndexPage>150ms for 10s, stop as failed
-    - fail of CheckoutPage>50% for 10s, stop as failed
+  criteria:
+  - avg-rt of IndexPage>150ms for 10s, stop as failed
+  - fail of CheckoutPage>50% for 10s, stop as failed
 scenarios:
   sc:
     requests:

@@ -153,7 +153,7 @@ clientsTemplate {
 				 } */
 
 
-				container(name: 'maven') {
+				/*container(name: 'maven') {
 					stage ('Generació Tag DEFINITIU') {
 						echo "Generació Tag DEFINITIU"
 					}
@@ -161,12 +161,12 @@ clientsTemplate {
 					stage ('Smoke Test PRO') {
 						sh "mvn verify -PsmokeTest,dev"
 					}
-				}
+				} */
 
 
 				stage("post-proc") {
-					archiveArtifacts artifacts: 'artifacts/*.log'
-					junit 'artifacts/xunit.xml'
+					archiveArtifacts artifacts: 'target/**/*'
+					junit 'target/surefire-reports/*.xml'
 				}
 	  		 }
 	  	  }

@@ -17,7 +17,7 @@ clientsTemplate {
 	  performanceTemplate {
 	   mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
 			node('maven-and-docker-and-kubectl') {
-			/*	container(name: 'maven') {
+				container(name: 'maven') {
 					stage("Checkout") {
 						git 'https://github.com/mostrovoi/demo-canigo.git'
 					}
@@ -25,7 +25,8 @@ clientsTemplate {
 					stage("Build") {
 					    sh "mvn clean package -Dmaven.test.failure.ignore=true"			
 					}
-				
+				}
+				/*
 					stage('Ciberseguretat: CESICAT') {
 						echo "Ciberseguretat: Fortify"
 						echo "Ciberseguretat: ZAP"
@@ -139,7 +140,7 @@ clientsTemplate {
 				}
 
 				//TODO: Moure fora del node (flyweight executor) fer stash/untash
-				container(name: 'clients') {
+				/*container(name: 'clients') {
 					stage ('Desplegament PRO') {
 						input 'Vols promocionar el build a pro?'
 						deployProject{
@@ -149,18 +150,19 @@ clientsTemplate {
 							registry = 'gencat.azurecr.io'
 						}
 					}   
-				 }
+				 } */
 
 
-				stage ('Generació Tag DEFINITIU') {
-					echo "Generació Tag DEFINITIU"
-				}
-					
 				container(name: 'maven') {
+					stage ('Generació Tag DEFINITIU') {
+						echo "Generació Tag DEFINITIU"
+					}
+
 					stage ('Smoke Test PRO') {
 						sh "mvn verify -PsmokeTest,dev"
 					}
 				}
+
 
 				stage("post-proc") {
 					archiveArtifacts artifacts: 'artifacts/*.log'

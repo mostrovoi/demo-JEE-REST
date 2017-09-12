@@ -4,11 +4,22 @@ execution:
   iterations: 50
   scenario: sc
 
+reporting:
+  - module: final-stats
+    summary: true
+    percentiles: true
+    failed-labels: false
+    test-duration: true
+    dump-xml: stats.xml
+  - module: passfail
+  criteria:
+  - avg-rt of IndexPage>150ms for 10s, stop as failed
+  - fail of CheckoutPage>50% for 10s, stop as failed
 scenarios:
   sc:
     requests:
-    - http://blazedemo.com/
-    - url: http://blazedemo.com
+    - http://bookstore.dev.matxa.es/
+    - url: http://bookstore.dev.matxa.es/
       label: should-fail
       assert:
       - "non-exist"

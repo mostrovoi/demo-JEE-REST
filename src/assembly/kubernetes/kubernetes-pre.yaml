@@ -28,10 +28,6 @@ items:
           volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: demo-canigo-postgredb
-        volumes:
-        - name: demo-canigo-postgredb
-          persistentVolumeClaim:
-             claimName: demo-canigo-pvc
 - apiVersion: extensions/v1beta1
   kind: Deployment
   metadata:

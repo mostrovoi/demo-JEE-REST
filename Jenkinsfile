@@ -129,8 +129,6 @@ clientsTemplate {
 				} */
 				container(name: 'performance') {
 					stage('Capacity TEST PRE') {
-						 sh "pwd"
-						 sh "ls"
        					 sh "bzt src/test/jmeter/simple-assert.yml -o settings.artifacts-dir=artifacts"
 					}
 					stage ('Exploratory Test PRE') {

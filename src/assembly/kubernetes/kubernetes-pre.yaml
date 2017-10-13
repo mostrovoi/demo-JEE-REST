@@ -27,9 +27,13 @@ items:
             value: /var/lib/postgresql/data/pgdata
           volumeMounts:
           - mountPath: /var/lib/postgresql/data
-            name: demo-canigo-pvc
+            name: demo-canigo-postgres
         imagePullSecrets:
         - name: regsecret
+        volumes:
+        - name: demo-canigo-postgres
+          persistentVolumeClaim:
+            claimName: demo-canigo-pvc
 - apiVersion: extensions/v1beta1
   kind: Deployment
   metadata:

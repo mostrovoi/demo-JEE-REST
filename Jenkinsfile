@@ -19,18 +19,18 @@ clientsTemplate {
 			node('maven-and-docker-and-kubectl') {
 				container(name: 'maven') {
 					stage("Checkout") {
+						//checkout scm
 						git 'https://github.com/mostrovoi/demo-canigo.git'
 					}
 					
 					stage("Build") {
-					    sh "mvn clean package -Dmaven.test.failure.ignore=true"			
+					    sh "mvn clean package -Dmaven.test.failure.ignore"
+					    //TODO: Extend to wars and non java based
+					    archiveArtifacts artifacts: '**/target/*.jar'
+					    junit healthScaleFactor: 1.0, testResults: 'target/surefire-reports/TEST*.xml'	
 					}
-				}
-				/*
-					stage('Ciberseguretat: CESICAT') {
-						echo "Ciberseguretat: Fortify"
-						echo "Ciberseguretat: ZAP"
-					}
+				
+
 
 					stage ('Anàlisi de codi estàtic') {
 						withSonarQubeEnv("SonarQubeServer") {
@@ -66,7 +66,7 @@ clientsTemplate {
 				}
 
 				//TODO: Moure a funcio parametritzable
-			    stage ('Generació Tag BUILD') {
+			    /*stage ('Generació Tag BUILD') {
 			        //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
 			       def pom = readMavenPom file: 'pom.xml'
 			  	   //Si la versió es SNAPSHOT o ja existeix tirar-la enrera
@@ -91,7 +91,7 @@ clientsTemplate {
 			    } */
 			  
 			  	//TODO: Externalitzar valors
-			/*	container(name: 'clients') {
+				container(name: 'clients') {
 					stage ('Desplegament INT') {
 						deployProject{
 							stagedProject = 'demo-canigo:latest'
@@ -103,8 +103,37 @@ clientsTemplate {
 				}
 
 				container(name: 'maven') {
-					stage ('Smoke Test INT') {
-					 	  sh "mvn verify -PsmokeTest,dev"
+					//TODO: Not sure of the real nature of smoke tests
+					/*stage ('Smoke Test INT') {
+					 	sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,dev"
+					}*/
+					stage('Acceptance Test INT') {
+					     sh "mvn verify -Dmaven.test.failure.ignore" 
+					}
+					stage ('CESICAT: Seguretat amb ZAP') {
+                            try {
+                                sh "mvn -Psecurity-check verify"
+                                publishHTML(target: [
+                                        reportDir            : 'target',
+                                        reportFiles          : 'dependency-check-report.html',
+                                        reportName           : 'OWASP Dependency Check Report',
+                                        keepAll              : true,
+                                        alwaysLinkToLastBuild: true,
+                                        allowMissing         : false
+                                ])
+                            }
+                            finally {
+                                archiveArtifacts artifacts: '*/target/zap-reports/*.xml'
+                                publishHTML(target: [
+                                        reportDir            : 'target/zap-reports',
+                                        reportFiles          : 'zapReport.html',
+                                        reportName           : 'ZAP Report',
+                                        keepAll              : true,
+                                        alwaysLinkToLastBuild: true,
+                                        allowMissing         : false
+                                ])
+                                dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
+							}
 					}
 				}
 
@@ -120,13 +149,13 @@ clientsTemplate {
 				}
 
 				container(name: 'maven') {
-					stage ('Smoke Test PRE') {
+					/*stage ('Smoke Test PRE') {
 						sh "mvn verify -PsmokeTest,dev"
-					}
+					}*/
 					stage ('Acceptance Test PRE') {
-					 	sh "mvn verify"
+					 	sh "mvn verify -Dmaven.test.failure.ignore" 
 					}
-				} */
+				} 
 				container(name: 'performance') {
 					stage('Capacity TEST PRE') {
        					 sh "bzt src/test/jmeter/simple-assert.yml -o settings.artifacts-dir=artifacts"
@@ -138,7 +167,7 @@ clientsTemplate {
 				}
 
 				//TODO: Moure fora del node (flyweight executor) fer stash/untash
-				/*container(name: 'clients') {
+				container(name: 'clients') {
 					stage ('Desplegament PRO') {
 						input 'Vols promocionar el build a pro?'
 						deployProject{
@@ -148,10 +177,10 @@ clientsTemplate {
 							registry = 'gencat.azurecr.io'
 						}
 					}   
-				 } */
+				 } 
 
 
-				/*container(name: 'maven') {
+				container(name: 'maven') {
 					stage ('Generació Tag DEFINITIU') {
 						echo "Generació Tag DEFINITIU"
 					}
@@ -159,7 +188,7 @@ clientsTemplate {
 					stage ('Smoke Test PRO') {
 						sh "mvn verify -PsmokeTest,dev"
 					}
-				} */
+				} 
 
 
 				stage("post-proc") {

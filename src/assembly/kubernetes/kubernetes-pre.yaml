@@ -14,7 +14,7 @@ items:
       spec:
         containers:
         - name: postgres
-          image: gencatcloud/postgres:9.5
+          image: gencat.azurecr.io/postgres:9.5
           imagePullPolicy: "Always"
           ports:
           - containerPort: 5432
@@ -28,6 +28,8 @@ items:
           volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: demo-canigo-postgredb
+        imagePullSecrets:
+        - name: regsecret
 - apiVersion: extensions/v1beta1
   kind: Deployment
   metadata:

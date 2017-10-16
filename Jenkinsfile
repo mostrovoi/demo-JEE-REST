@@ -28,7 +28,15 @@ clientsTemplate {
 					    //Arxiva l'artefacte al master 
 					    archiveArtifacts artifacts: 'target/*.jar'
 					    //TODO: Change to publish html
-					    junit healthScaleFactor: 1.0, testResults: 'target/surefire-reports/TEST*.xml'	
+					    //junit healthScaleFactor: 1.0, testResults: 'target/surefire-reports/TEST*.xml'	
+					    publishHTML(target: [
+                                reportDir            : 'target/surefire-reports',
+                                reportFiles          : 'index.html',
+                                reportName           : 'Test unitaris',
+                                keepAll              : true,
+                                alwaysLinkToLastBuild: true,
+                                allowMissing         : false
+                        ])
 					}
 				
 

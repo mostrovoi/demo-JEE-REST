@@ -160,16 +160,16 @@ clientsTemplate {
 					stage('Capacity TEST PRE') {
        					 sh "bzt src/test/jmeter/simple-assert.yml -o settings.artifacts-dir=artifacts"
 					}
-					stage ('Exploratory Test PRE') {
-						echo "Exploratory Test PRE"
-					}
 
 				}
 
-				//TODO: Moure fora del node (flyweight executor) fer stash/untash
+				stage ('Exploratory Test PRE') {
+					echo "Exploratory Test PRE"
+					input 'Vols promocionar el build a pro?'
+				}
+
 				container(name: 'clients') {
 					stage ('Desplegament PRO') {
-						input 'Vols promocionar el build a pro?'
 						deployProject{
 							stagedProject = 'demo-canigo:latest'
 						    resourceLocation = 'src/assembly/kubernetes/kubernetes.yaml'

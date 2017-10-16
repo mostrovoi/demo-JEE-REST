@@ -530,8 +530,7 @@
                 </plugins>
             </build>
         </profile>
-        </profile>
-          <profile>
+        <profile>
             <id>owasp-dependencycheck</id>
             <build>
                 <plugins>

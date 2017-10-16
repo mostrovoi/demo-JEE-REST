@@ -51,7 +51,7 @@ clientsTemplate {
 
 					 stage("CESICAT: Anàlisi seguretat dependency check") {
                             try {
-                                sh "mvn -Powasp-dependencycheck verify"
+                                sh "mvn verify -Powasp-dependencycheck,dev"
                                 publishHTML(target: [
                                         reportDir            : 'target',
                                         reportFiles          : 'dependency-check-report.html',

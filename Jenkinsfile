@@ -91,7 +91,8 @@ clientsTemplate {
 			    } */
 			  
 			  	//TODO: Externalitzar valors
-				container(name: 'clients') {
+				/* TEMPORARY COMMENTED OUT
+				  container(name: 'clients') {
 					stage ('Desplegament INT') {
 						deployProject{
 							stagedProject = 'demo-canigo:latest'
@@ -100,7 +101,7 @@ clientsTemplate {
 							registry = 'gencat.azurecr.io'
 						}
 					}
-				}
+				} */
 
 				container(name: 'maven') {
 					//TODO: Not sure of the real nature of smoke tests
@@ -136,7 +137,7 @@ clientsTemplate {
 							}
 					}
 				}
-
+				/* TEMP
 				container(name: 'clients') {
 					stage ('Desplegament PRE') {
 						deployProject{
@@ -146,7 +147,7 @@ clientsTemplate {
 							registry = 'gencat.azurecr.io'
 						}
 					}
-				}
+				} */
 
 				container(name: 'maven') {
 					/*stage ('Smoke Test PRE') {
@@ -167,6 +168,7 @@ clientsTemplate {
 				}
 
 				//TODO: Moure fora del node (flyweight executor) fer stash/untash
+				/* TEMPORARY 
 				container(name: 'clients') {
 					stage ('Desplegament PRO') {
 						input 'Vols promocionar el build a pro?'
@@ -178,7 +180,7 @@ clientsTemplate {
 						}
 					}   
 				 } 
-
+ 	             */
 
 				container(name: 'maven') {
 					stage ('Generació Tag DEFINITIU') {

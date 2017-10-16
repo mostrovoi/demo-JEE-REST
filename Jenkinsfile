@@ -12,7 +12,7 @@
     pipelineTriggers([])
 ]) */
 
-//clientsTemplate {
+clientsTemplate {
 	dockerTemplate {
 	  performanceTemplate {
 	   mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
@@ -91,8 +91,7 @@
 			    } */
 			  
 			  	//TODO: Externalitzar valors
-				/* TEMPORARY COMMENTED OUT
-				  container(name: 'clients') {
+				container(name: 'clients') {
 					stage ('Desplegament INT') {
 						deployProject{
 							stagedProject = 'demo-canigo:latest'
@@ -101,7 +100,7 @@
 							registry = 'gencat.azurecr.io'
 						}
 					}
-				} */
+				} 
 
 				container(name: 'maven') {
 					//TODO: Not sure of the real nature of smoke tests
@@ -137,7 +136,7 @@
 							}
 					}
 				}
-				/* TEMP
+				
 				container(name: 'clients') {
 					stage ('Desplegament PRE') {
 						deployProject{
@@ -147,7 +146,7 @@
 							registry = 'gencat.azurecr.io'
 						}
 					}
-				} */
+				} 
 
 				container(name: 'maven') {
 					/*stage ('Smoke Test PRE') {
@@ -168,7 +167,6 @@
 				}
 
 				//TODO: Moure fora del node (flyweight executor) fer stash/untash
-				/* TEMPORARY 
 				container(name: 'clients') {
 					stage ('Desplegament PRO') {
 						input 'Vols promocionar el build a pro?'
@@ -180,7 +178,6 @@
 						}
 					}   
 				 } 
- 	             */
 
 				container(name: 'maven') {
 					stage ('Generació Tag DEFINITIU') {

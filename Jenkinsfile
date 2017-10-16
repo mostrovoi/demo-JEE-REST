@@ -25,8 +25,9 @@ clientsTemplate {
 					
 					stage("Build") {
 					    sh "mvn clean package -Dmaven.test.failure.ignore"
-					    //TODO: Extend to wars and non java based
-					    archiveArtifacts artifacts: '**/target/*.jar'
+					    //Arxiva l'artefacte al master 
+					    archiveArtifacts artifacts: 'target/*.jar'
+					    //TODO: Change to publish html
 					    junit healthScaleFactor: 1.0, testResults: 'target/surefire-reports/TEST*.xml'	
 					}
 				
@@ -48,8 +49,10 @@ clientsTemplate {
 								error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
 					   }
 					}
-
+					 //TODO: Fest aquesta tasca en paralel amb Sonarqube
 					 stage("CESICAT: Anàlisi seguretat dependency check") {
+                            //TODO: Opcio d'utilitzar dependencyCheckAnalyzer
+                            //dependencyCheckAnalyzer datadir: '', hintsFile: '', includeCsvReports: false, includeHtmlReports: true, includeJsonReports: false, isAutoupdateDisabled: false, outdir: '', scanpath: '**/viewer-**.war,', skipOnScmChange: false, skipOnUpstreamChange: false, suppressionFile: '', zipExtensions: ''
                             try {
                                 sh "mvn verify -Powasp-dependencycheck,dev"
                             }
@@ -57,7 +60,7 @@ clientsTemplate {
                                 publishHTML(target: [
                                         reportDir            : 'target',
                                         reportFiles          : 'dependency-check-report.html',
-                                        reportName           : 'OWASP Dependency Check Report',
+                                        reportName           : 'OWASP Dependency Check Informe',
                                         keepAll              : true,
                                         alwaysLinkToLastBuild: true,
                                         allowMissing         : false

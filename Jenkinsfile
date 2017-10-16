@@ -12,7 +12,7 @@
     pipelineTriggers([])
 ]) */
 
-clientsTemplate {
+//clientsTemplate {
 	dockerTemplate {
 	  performanceTemplate {
 	   mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
@@ -201,6 +201,6 @@ clientsTemplate {
 	  	  }
 	   }
 	}
-}
+//}
 
 

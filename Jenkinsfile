@@ -47,6 +47,25 @@ clientsTemplate {
 							else
 								error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
 					 }
+
+					 stage("CESICAT: Anàlisi seguretat dependency check") {
+                            try {
+                                sh "mvn -Powasp-dependencycheck verify"
+                                publishHTML(target: [
+                                        reportDir            : 'target',
+                                        reportFiles          : 'dependency-check-report.html',
+                                        reportName           : 'OWASP Dependency Check Report',
+                                        keepAll              : true,
+                                        alwaysLinkToLastBuild: true,
+                                        allowMissing         : false
+                                ])
+                            }
+                            finally {
+                                dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
+							}
+					}
+				}
+					 }
 				   } 
 				} 
 
@@ -110,17 +129,9 @@ clientsTemplate {
 					stage('Acceptance Test INT') {
 					     sh "mvn verify -Dmaven.test.failure.ignore" 
 					}
-					stage ('CESICAT: Seguretat amb ZAP') {
+					stage ('CESICAT: Anàlisi seguretat amb ZAP') {
                             try {
-                                sh "mvn -Psecurity-check verify"
-                                publishHTML(target: [
-                                        reportDir            : 'target',
-                                        reportFiles          : 'dependency-check-report.html',
-                                        reportName           : 'OWASP Dependency Check Report',
-                                        keepAll              : true,
-                                        alwaysLinkToLastBuild: true,
-                                        allowMissing         : false
-                                ])
+                                sh "mvn -Powasp-zap verify"
                             }
                             finally {
                                 archiveArtifacts artifacts: '*/target/zap-reports/*.xml'
@@ -132,7 +143,6 @@ clientsTemplate {
                                         alwaysLinkToLastBuild: true,
                                         allowMissing         : false
                                 ])
-                                dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
 							}
 					}
 				}

@@ -532,18 +532,11 @@
                 </dependency>
             </dependencies>
         </profile>
-          <profile>
-            <id>security-check</id>
-            <properties>
-                <skipSecurityTests>false</skipSecurityTests>
-                <skipNode>true</skipNode>
-                <skipUnitTests>true</skipUnitTests>
-                <skipITs>true</skipITs>
-                <skipTests>true</skipTests>
-            </properties>
+        <profile>
+            <id>owasp-zap</id>
             <build>
                 <plugins>
-                    <!-- tag::owasp-zap-include[] -->
+                  <!-- tag::owasp-zap-include[] -->
                     <plugin>
                         <groupId>de.martinreinhardt-online</groupId>
                         <artifactId>zap-maven-plugin</artifactId>
@@ -571,13 +564,23 @@
                         </executions>
                     </plugin>
                     <!-- end::owasp-zap-include[] -->
+                </plugins>
+            </build>
+        </profile>
+        </profile>
+          <profile>
+            <id>owasp-dependencycheck</id>
+            <build>
+                <plugins>
+
                     <!-- tag::owasp-maven-include[] -->
                     <plugin>
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
+                        <version>2.1.1</version>
                         <configuration>
-                            <skip>${skipSecurityTests}</skip>
-                            <failBuildOnCVSS>5</failBuildOnCVSS>
+                            <skip>false</skip>
+                            <failBuildOnCVSS>8</failBuildOnCVSS>
                         </configuration>
                         <executions>
                             <execution>
@@ -588,40 +591,6 @@
                         </executions>
                     </plugin>
                     <!-- end::owasp-maven-include[] -->
-                    <!-- tag::nsp-maven-include[] -->
-                    <plugin>
-                        <groupId>com.github.eirslett</groupId>
-                        <artifactId>frontend-maven-plugin</artifactId>
-                        <version>${frontend-maven-plugin.version}</version>
-                        <configuration>
-                            <skip>${skipSecurityTests}</skip>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>install node and npm</id>
-                                <goals>
-                                    <goal>install-node-and-npm</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                                <configuration>
-                                    <nodeVersion>${node.version}</nodeVersion>
-                                    <npmVersion>${npm.version}</npmVersion>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>npm check</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                                <configuration>
-                                    <arguments>run check</arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <!-- end::nsp-maven-include[] -->
                 </plugins>
             </build>
         </profile>

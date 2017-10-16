@@ -189,7 +189,6 @@ clientsTemplate {
 					}
 				} 
 
-
 				stage("post-proc") {
 					archiveArtifacts artifacts: 'target/**/*'
 					junit 'target/surefire-reports/*.xml'
@@ -198,6 +197,6 @@ clientsTemplate {
 	  	  }
 	   }
 	}
-//}
+}
 
 

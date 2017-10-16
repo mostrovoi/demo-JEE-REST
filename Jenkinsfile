@@ -34,7 +34,7 @@ clientsTemplate {
 
 					stage ('Anàlisi de codi estàtic') {
 						withSonarQubeEnv("SonarQubeServer") {
-						    sh "mvn sonar:sonar -Dsonar.dynamic=reuseReports -Dsonar.host.url=$SONAR_HOST_URL" 
+						    sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL" 
 					    }
 					} 
 

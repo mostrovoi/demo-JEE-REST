@@ -52,6 +52,8 @@ clientsTemplate {
 					 stage("CESICAT: Anàlisi seguretat dependency check") {
                             try {
                                 sh "mvn verify -Powasp-dependencycheck,dev"
+                            }
+                            finally {
                                 publishHTML(target: [
                                         reportDir            : 'target',
                                         reportFiles          : 'dependency-check-report.html',
@@ -60,8 +62,6 @@ clientsTemplate {
                                         alwaysLinkToLastBuild: true,
                                         allowMissing         : false
                                 ])
-                            }
-                            finally {
                                 dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
 							}
 
@@ -74,8 +74,7 @@ clientsTemplate {
 					stage ('Generació imatge docker') {
 						 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")
 					}						   	
-				
-				
+	
 					stage ('Pujar imatge docker al nostre registre') {
 						withCredentials([usernamePassword(credentialsId: 'azureRegistryId', passwordVariable: 'REGISTRY_PASSWORD', usernameVariable: 'REGISTRY_USERNAME')]) { 
 						  sh("docker login -u ${REGISTRY_USERNAME} -p ${REGISTRY_PASSWORD} gencat.azurecr.io")

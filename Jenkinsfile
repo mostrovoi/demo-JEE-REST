@@ -46,7 +46,8 @@ clientsTemplate {
 							  echo "SONAR: Codi acompleix els mínims de qualitat. Enhorabona!"
 							else
 								error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
-					 }
+					   }
+					}
 
 					 stage("CESICAT: Anàlisi seguretat dependency check") {
                             try {
@@ -63,11 +64,10 @@ clientsTemplate {
                             finally {
                                 dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
 							}
-					}
-				}
+
 					 }
-				   } 
-				} 
+			     } 
+
 
 			    //TODO: Externalitzar el nom del registre i logica a funcions externes
 				container(name: 'docker') {
@@ -123,9 +123,9 @@ clientsTemplate {
 
 				container(name: 'maven') {
 					//TODO: Not sure of the real nature of smoke tests
-					/*stage ('Smoke Test INT') {
+					stage ('Smoke Test INT') {
 					 	sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,dev"
-					}*/
+					}
 					stage('Acceptance Test INT') {
 					     sh "mvn verify -Dmaven.test.failure.ignore" 
 					}
@@ -159,9 +159,9 @@ clientsTemplate {
 				} 
 
 				container(name: 'maven') {
-					/*stage ('Smoke Test PRE') {
+					stage ('Smoke Test PRE') {
 						sh "mvn verify -PsmokeTest,dev"
-					}*/
+					}
 					stage ('Acceptance Test PRE') {
 					 	sh "mvn verify -Dmaven.test.failure.ignore" 
 					}

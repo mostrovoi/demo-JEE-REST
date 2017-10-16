@@ -504,17 +504,17 @@
                     <plugin>
                         <groupId>de.martinreinhardt-online</groupId>
                         <artifactId>zap-maven-plugin</artifactId>
-                        <version>${zap-maven-plugin.version}</version>
+                        <version>0.1.0</version>
                         <configuration>
                             <!-- Configuration parameters -->
                             <zapHost>localhost</zapHost>
                             <zapPort>44444</zapPort>
                             <failingRiskCodeThreshold>5</failingRiskCodeThreshold>
-                            <loginUrl>http://ngspring:41180/login</loginUrl>
-                            <targetUrl>http://ngspring:41180/</targetUrl>
+                            <loginUrl>http://bookstore.dev.matxa.es/#/login</loginUrl>
+                            <targetUrl>http://bookstore.dev.matxa.es</targetUrl>
                             <authenticationType>form</authenticationType>
-                            <username>user</username>
-                            <password>password</password>
+                            <username>admin</username>
+                            <password>admin</password>
                             <shouldRunAjaxSpider>true</shouldRunAjaxSpider>
                         </configuration>
                         <executions>

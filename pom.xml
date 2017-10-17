@@ -24,7 +24,7 @@
         <gatling.version>2.1.6</gatling.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hikaricp.version>2.4.1</hikaricp.version>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
         <joda-time-hibernate.version>1.4</joda-time-hibernate.version>
         <liquibase-hibernate4.version>3.5</liquibase-hibernate4.version>
@@ -53,7 +53,6 @@
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
         <spring-security.version>4.0.2.RELEASE</spring-security.version>
         <springfox.version>2.0.3</springfox.version>
-        <testng.version>6.9.10</testng.version>
         <usertype-core.version>4.0.0.GA</usertype-core.version>
     </properties>
 
@@ -339,11 +338,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-data</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
-        </dependency>
     </dependencies>
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
@@ -406,10 +400,6 @@
                     <downloadSources>true</downloadSources>
                     <downloadJavadocs>true</downloadJavadocs>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.19</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -497,14 +487,74 @@
             </dependencies>
         </profile>
         <profile>
+            <id>int</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <arguments>
+                                <argument>--spring.profiles.active=int</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <!-- log configuration -->
+                <logback.loglevel>INFO</logback.loglevel>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>pre</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <arguments>
+                                <argument>--spring.profiles.active=pre</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <!-- log configuration -->
+                <logback.loglevel>INFO</logback.loglevel>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>owasp-zap</id>
             <build>
                 <plugins>
-                  <!-- tag::owasp-zap-include[] -->
+                    <!-- tag::owasp-zap-include[] -->
                     <plugin>
                         <groupId>de.martinreinhardt-online</groupId>
                         <artifactId>zap-maven-plugin</artifactId>
                         <version>0.1.0</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>analyze</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                         <configuration>
                             <!-- Configuration parameters -->
                             <zapHost>localhost</zapHost>
@@ -517,14 +567,6 @@
                             <password>admin</password>
                             <shouldRunAjaxSpider>true</shouldRunAjaxSpider>
                         </configuration>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>analyze</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                     <!-- end::owasp-zap-include[] -->
                 </plugins>
@@ -539,10 +581,6 @@
                         <groupId>org.owasp</groupId>
                         <artifactId>dependency-check-maven</artifactId>
                         <version>2.1.1</version>
-                        <configuration>
-                            <skip>false</skip>
-                            <failBuildOnCVSS>11</failBuildOnCVSS>
-                        </configuration>
                         <executions>
                             <execution>
                                 <goals>
@@ -550,6 +588,10 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <skip>false</skip>
+                            <failBuildOnCVSS>11</failBuildOnCVSS>
+                        </configuration>
                     </plugin>
                     <!-- end::owasp-maven-include[] -->
                 </plugins>
@@ -620,16 +662,77 @@
             </dependencies>
         </profile>
         <profile>
+            <id>integrationTest</id>
+            <build>
+                <plugins>
+                    <!-- See: https://github.com/spring-projects/spring-boot/issues/6254 -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.19</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <additionalClasspathElements>
+                                    <additionalClasspathElement>${basedir}/target/classes</additionalClasspathElement>
+                                </additionalClasspathElements>
+                                <parallel>none</parallel>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skipTests>true</skipTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>smokeTest</id>
+            <!-- See bug: https://github.com/spring-projects/spring-boot/issues/6254 -->
             <build>
                 <plugins>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>2.19</version>
-                        <configuration>
+                       <configuration>
                             <includes>
                                 <include>**/*Smoke.java</include>
                             </includes>
+                            <additionalClasspathElements>
+                                    <additionalClasspathElement>${basedir}/target/classes</additionalClasspathElement>
+                                </additionalClasspathElements>
+                                <parallel>none</parallel>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skipTests>true</skipTests>
                         </configuration>
                     </plugin>
                 </plugins>

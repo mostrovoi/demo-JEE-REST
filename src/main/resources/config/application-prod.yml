@@ -1,5 +1,6 @@
 server:
-    port: 8080
+    url: bookstore.matxa.es
+    port: 80
 
 liquibase:
     context: prod

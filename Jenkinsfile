@@ -25,8 +25,6 @@ clientsTemplate {
 					
 					stage("Build") {
 					    sh "mvn clean package -Dmaven.test.failure.ignore"
-					    //Arxiva l'artefacte al master 
-					    archiveArtifacts artifacts: 'target/*.jar'
 					    //TODO: Change to publish html
 					    //junit healthScaleFactor: 1.0, testResults: 'target/surefire-reports/TEST*.xml'	
 					    publishHTML(target: [
@@ -209,9 +207,8 @@ clientsTemplate {
 					}
 				} 
 
-				stage("post-proc") {
+				stage("Arxivar artefactes") {
 					archiveArtifacts artifacts: 'target/**/*'
-					junit 'target/surefire-reports/*.xml'
 				}
 	  		 }
 	  	  }

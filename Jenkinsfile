@@ -139,7 +139,7 @@ clientsTemplate {
 					}
 					stage ('CESICAT: Anàlisi seguretat amb ZAP') {
                             try {
-                                sh "mvn -Powasp-zap verify"
+                                sh "mvn -Powasp-zap,dev verify"
                             }
                             finally {
                                 archiveArtifacts artifacts: '*/target/zap-reports/*.xml'
@@ -203,7 +203,7 @@ clientsTemplate {
 					}
 
 					stage ('Smoke Test PRO') {
-						sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,dev -Dserver.url=http://bookstore.matxa.es""
+						sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,dev -Dserver.url=http://bookstore.matxa.es"
 					}
 				} 
 

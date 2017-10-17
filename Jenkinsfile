@@ -26,15 +26,15 @@ clientsTemplate {
 					stage("Build") {
 					    sh "mvn clean package -Dmaven.test.failure.ignore"
 					    //TODO: Change to publish html
-					    //junit healthScaleFactor: 1.0, testResults: 'target/surefire-reports/TEST*.xml'	
-					    publishHTML(target: [
+					    junit healthScaleFactor: 1.0, testResults: 'target/surefire-reports/TEST*.xml'	
+					    /*publishHTML(target: [
                                 reportDir            : 'target/surefire-reports',
                                 reportFiles          : 'index.html',
                                 reportName           : 'Test unitaris',
                                 keepAll              : true,
                                 alwaysLinkToLastBuild: true,
                                 allowMissing         : false
-                        ])
+                        ]) */
 					}
 				
 
@@ -132,10 +132,10 @@ clientsTemplate {
 				container(name: 'maven') {
 					//TODO: Not sure of the real nature of smoke tests
 					stage ('Smoke Test INT') {
-					 	sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,dev"
+					 	sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,int -Dserver.url=http://bookstore.dev.matxa.es"
 					}
 					stage('Acceptance Test INT') {
-					     sh "mvn verify -Dmaven.test.failure.ignore" 
+					     sh "mvn verify -Dmaven.test.failure.ignore -PintegrationTest,int -Dserver.url=http://bookstore.dev.matxa.es" 
 					}
 					stage ('CESICAT: Anàlisi seguretat amb ZAP') {
                             try {
@@ -168,10 +168,10 @@ clientsTemplate {
 
 				container(name: 'maven') {
 					stage ('Smoke Test PRE') {
-						sh "mvn verify -PsmokeTest,dev"
+						sh "mvn verify  -Dmaven.test.failure.ignore -PsmokeTest,pre -Dserver.url=http://bookstore.pre.matxa.es"
 					}
-					stage ('Acceptance Test PRE') {
-					 	sh "mvn verify -Dmaven.test.failure.ignore" 
+					stage ('Acceptance Test PRE') { 
+					 	sh "mvn verify -Dmaven.test.failure.ignore  -PintegrationTest,pre -Dserver.url=http://bookstore.dev.matxa.es" 
 					}
 				} 
 				container(name: 'performance') {
@@ -203,7 +203,7 @@ clientsTemplate {
 					}
 
 					stage ('Smoke Test PRO') {
-						sh "mvn verify -PsmokeTest,dev"
+						sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,dev -Dserver.url=http://bookstore.matxa.es""
 					}
 				} 
 

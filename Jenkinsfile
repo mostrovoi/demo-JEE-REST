@@ -15,7 +15,8 @@
 clientsTemplate {
 	dockerTemplate {
 	  performanceTemplate {
-	   mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
+	   mavenTemplate(name: 'maven2') {
+	      mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
 			node('maven-and-docker-and-kubectl') {
 				container(name: 'maven') {
 					stage("Checkout") {
@@ -36,47 +37,51 @@ clientsTemplate {
                                 allowMissing         : false
                         ]) */
 					}
-				
+				}
+				parallel(
+					"Sonar": {
+						container(name: 'maven') {
+							stage ('Anàlisi de codi estàtic') {
+								withSonarQubeEnv("SonarQubeServer") {
+								    sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL" 
+							    }
+							} 
 
-					stage ('Anàlisi de codi estàtic') {
-						withSonarQubeEnv("SonarQubeServer") {
-						    sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL" 
-					    }
-					} 
+							//TODO: Moure fora del node, no cal un executor assignat
+							stage("Validació de SonarQube Gatekeeper") {
+								timeout(time: 5, unit: 'MINUTES') { 
+									def qG = waitForQualityGate()
+									if(qG.status == 'OK')
+									  echo "SONAR: Codi acompleix els mínims de qualitat. Enhorabona!"
+									else
+										error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
+							   }
+							}		
+						},
+					"OWASP": {
+						container(name: 'maven2') {
 
-					//TODO: Moure fora del node, no cal un executor assignat
-					stage("Validació de SonarQube Gatekeeper") {
-						timeout(time: 5, unit: 'MINUTES') { 
-							def qG = waitForQualityGate()
-							if(qG.status == 'OK')
-							  echo "SONAR: Codi acompleix els mínims de qualitat. Enhorabona!"
-							else
-								error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
-					   }
-					}
+							 stage("CESICAT: Anàlisi seguretat dependency check") {
+			                        //TODO: Opcio d'utilitzar dependencyCheckAnalyzer
+			                        //dependencyCheckAnalyzer datadir: '', hintsFile: '', includeCsvReports: false, includeHtmlReports: true, includeJsonReports: false, isAutoupdateDisabled: false, outdir: '', scanpath: '**/viewer-**.war,', skipOnScmChange: false, skipOnUpstreamChange: false, suppressionFile: '', zipExtensions: ''
+			                        try {
+			                            sh "mvn verify -Powasp-dependencycheck,dev"
+			                        }
+			                        finally {
+			                            publishHTML(target: [
+			                                    reportDir            : 'target',
+			                                    reportFiles          : 'dependency-check-report.html',
+			                                    reportName           : 'OWASP Dependency Check Informe',
+			                                    keepAll              : true,
+			                                    alwaysLinkToLastBuild: true,
+			                                    allowMissing         : false
+			                            ])
+			                            dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
+									}
 
-					 //TODO: Fest aquesta tasca en paralel amb Sonarqube
-					 stage("CESICAT: Anàlisi seguretat dependency check") {
-	                        //TODO: Opcio d'utilitzar dependencyCheckAnalyzer
-	                        //dependencyCheckAnalyzer datadir: '', hintsFile: '', includeCsvReports: false, includeHtmlReports: true, includeJsonReports: false, isAutoupdateDisabled: false, outdir: '', scanpath: '**/viewer-**.war,', skipOnScmChange: false, skipOnUpstreamChange: false, suppressionFile: '', zipExtensions: ''
-	                        try {
-	                            sh "mvn verify -Powasp-dependencycheck,dev"
-	                        }
-	                        finally {
-	                            publishHTML(target: [
-	                                    reportDir            : 'target',
-	                                    reportFiles          : 'dependency-check-report.html',
-	                                    reportName           : 'OWASP Dependency Check Informe',
-	                                    keepAll              : true,
-	                                    alwaysLinkToLastBuild: true,
-	                                    allowMissing         : false
-	                            ])
-	                            dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
-							}
-
-					 }
-
-			     } 
+							 }
+						}
+					})
 
 			    //TODO: Externalitzar el nom del registre i logica a funcions externes
 				container(name: 'docker') {
@@ -209,11 +214,12 @@ clientsTemplate {
 
 				stage("Arxivar artefactes") {
 					archiveArtifacts artifacts: 'target/**/*'
-				}
-	  		 }
-	  	  }
-	   }
-	}
+				 }
+			  }
+	  		}
+	     }
+	  }
+   }
 }
 
 

@@ -205,6 +205,8 @@ clientsTemplate {
 				container(name: 'maven') {
 					stage ('Generació Tag DEFINITIU') {
 						echo "Generació Tag DEFINITIU"
+						//No cal contemplar-ho, ja ho ha fet l'Arnau
+						//Molt similar a generació tag intermig
 					}
 
 					stage ('Smoke Test PRO') {

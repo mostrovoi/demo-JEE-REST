@@ -595,8 +595,8 @@
                         </executions>
                         <configuration>
                             <!-- Configuration parameters -->
-                            <zapHost>localhost</zapHost>
-                            <zapPort>44444</zapPort>
+                            <zapHost>zap</zapHost>
+                            <zapPort>8080</zapPort>
                             <failingRiskCodeThreshold>5</failingRiskCodeThreshold>
                             <loginUrl>http://bookstore.dev.matxa.es/#/login</loginUrl>
                             <targetUrl>http://bookstore.dev.matxa.es</targetUrl>

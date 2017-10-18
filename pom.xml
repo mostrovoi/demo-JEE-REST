@@ -24,6 +24,8 @@
         <gatling.version>2.1.6</gatling.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hikaricp.version>2.4.1</hikaricp.version>
+        <!-- Adding jacoco to avoid error 500 with sonarQube -->
+        <jacoco-maven-plugin.version>0.7.4.201502262128</jacoco-maven-plugin.version>
         <java.version>1.8</java.version>
         <javax.inject.version>1</javax.inject.version>
         <joda-time-hibernate.version>1.4</joda-time-hibernate.version>
@@ -44,18 +46,16 @@
         <run.addResources>false</run.addResources>
         <selenium.version>2.53.1</selenium.version>
         <sonar-maven-plugin.version>3.2</sonar-maven-plugin.version>
-        <!-- Adding jacoco to avoid error 500 with sonarQube -->
-        <jacoco-maven-plugin.version>0.7.4.201502262128</jacoco-maven-plugin.version>
-              <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
-        <sonar.jacoco.itReportPath>${project.testresult.directory}/coverage/jacoco/jacoco-it.exec</sonar.jacoco.itReportPath>
-<sonar.jacoco.reportPath>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPath>
         <!-- End jacoco -->
         <sonar.exclusions>src/main/webapp/assets/**/*.*, src/main/webapp/bower_components/**/*.*, src/main/webapp/dist/**/*.*</sonar.exclusions>
-     <sonar.javascript.jstestdriver.reportsPath>${project.testresult.directory}/karma</sonar.javascript.jstestdriver.reportsPath> 
-      <sonar.javascript.lcov.reportPath>${project.testresult.directory}/coverage/report-lcov/lcov.info</sonar.javascript.lcov.reportPath>
-        <sonar.sources>${project.basedir}/src/main/</sonar.sources>
-        <sonar.junit.reportPaths>${project.testresult.directory}/surefire-reports</sonar.junit.reportPaths>
+        <sonar.jacoco.itReportPath>${project.testresult.directory}/coverage/jacoco/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <sonar.jacoco.reportPath>${project.testresult.directory}/coverage/jacoco/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.jacoco.reportPaths>${project.testresult.directory}/jacoco.exec</sonar.jacoco.reportPaths>
+        <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
+        <sonar.javascript.jstestdriver.reportsPath>${project.testresult.directory}/karma</sonar.javascript.jstestdriver.reportsPath>
+        <sonar.javascript.lcov.reportPath>${project.testresult.directory}/coverage/report-lcov/lcov.info</sonar.javascript.lcov.reportPath>
+        <sonar.junit.reportPaths>${project.testresult.directory}/surefire-reports</sonar.junit.reportPaths>
+        <sonar.sources>${project.basedir}/src/main/</sonar.sources>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
         <spring-security.version>4.0.2.RELEASE</spring-security.version>
         <springfox.version>2.0.3</springfox.version>
@@ -423,7 +423,13 @@
                     <packagingExcludes>WEB-INF/lib/tomcat-*.jar</packagingExcludes>
                 </configuration>
             </plugin>
-   <plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
@@ -453,12 +459,6 @@
                         </configuration>
                     </execution>
                 </executions>
-</plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>${sonar-maven-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.liquibase</groupId>

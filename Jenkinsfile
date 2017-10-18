@@ -78,7 +78,6 @@ clientsTemplate {
 
 			     } 
 
-
 			    //TODO: Externalitzar el nom del registre i logica a funcions externes
 				container(name: 'docker') {
 					stage ('Generació imatge docker') {
@@ -172,7 +171,7 @@ clientsTemplate {
 						sh "mvn verify  -Dmaven.test.failure.ignore -PsmokeTest,pre -Dserver.url=http://bookstore.pre.matxa.es"
 					}
 					stage ('Acceptance Test PRE') { 
-					 	sh "mvn verify -Dmaven.test.failure.ignore  -PintegrationTest,pre -Dserver.url=http://bookstore.dev.matxa.es" 
+					 	sh "mvn verify -Dmaven.test.failure.ignore  -PintegrationTest,pre -Dserver.url=http://bookstore.pre.matxa.es" 
 					}
 				} 
 				container(name: 'performance') {
@@ -204,7 +203,7 @@ clientsTemplate {
 					}
 
 					stage ('Smoke Test PRO') {
-						sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,dev -Dserver.url=http://bookstore.matxa.es"
+						sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,pre -Dserver.url=http://bookstore.matxa.es"
 					}
 				} 
 

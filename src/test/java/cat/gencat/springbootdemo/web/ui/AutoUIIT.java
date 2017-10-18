@@ -13,22 +13,27 @@ import org.junit.BeforeClass;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.ContextConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.boot.test.IntegrationTest;
+import cat.gencat.springbootdemo.Application;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@IntegrationTest
+@SpringApplicationConfiguration(classes = Application.class)
 public class AutoUIIT extends AbstractBaseUI {
 
     private static WebDriver driver;
     
     private WebDriverWait wait;
 
-    @Value("server.url")
+    @Value("${server.url}")
     private String appURL;
 
     @BeforeClass
@@ -60,7 +65,6 @@ public class AutoUIIT extends AbstractBaseUI {
     }
 
     public void doClick(String xpath, WebDriverWait wait) {
-
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
         driver.findElement(By.xpath(xpath)).click();
 

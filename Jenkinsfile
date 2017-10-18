@@ -37,8 +37,8 @@ clientsTemplate {
                         ]) */
 					}
 				}
-				parallel(
-					"Sonar": {
+				//parallel(
+				//	"Sonar": {
 						container(name: 'maven') {
 							stage ('Anàlisi de codi estàtic') {
 								withSonarQubeEnv("SonarQubeServer") {
@@ -57,9 +57,9 @@ clientsTemplate {
 							   }
 							}		
 						  }
-					},
-					"OWASP": {
-						container(name: 'maven2') {
+				//	},
+				//	"OWASP": {
+						container(name: 'maven') {
 
 							 stage("CESICAT: Anàlisi seguretat dependency check") {
 			                        //TODO: Opcio d'utilitzar dependencyCheckAnalyzer
@@ -81,7 +81,7 @@ clientsTemplate {
 
 							 }
 						}
-					})
+					//})
 
 			    //TODO: Externalitzar el nom del registre i logica a funcions externes
 				container(name: 'docker') {

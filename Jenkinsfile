@@ -15,7 +15,6 @@
 clientsTemplate {
 	dockerTemplate {
 	  performanceTemplate {
-	   mavenTemplate(name: 'maven2') {
 	      mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
 			node('maven-and-docker-and-kubectl') {
 				container(name: 'maven') {
@@ -218,9 +217,8 @@ clientsTemplate {
 				 }
 			  }
 	  		}
-	     }
-	  }
-   }
+	    }
+	}
 }
 
 

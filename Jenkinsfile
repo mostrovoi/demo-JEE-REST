@@ -57,7 +57,8 @@ clientsTemplate {
 										error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
 							   }
 							}		
-						},
+						  }
+					},
 					"OWASP": {
 						container(name: 'maven2') {
 

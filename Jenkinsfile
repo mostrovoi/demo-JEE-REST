@@ -36,10 +36,10 @@ clientsTemplate {
                                 allowMissing         : false
                         ]) */
 					}
-				}
+			//	}
 				//parallel(
 				//	"Sonar": {
-						container(name: 'maven') {
+			//			container(name: 'maven') {
 							stage ('Anàlisi de codi estàtic') {
 								withSonarQubeEnv("SonarQubeServer") {
 								    sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL" 
@@ -56,10 +56,10 @@ clientsTemplate {
 										error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
 							   }
 							}		
-						  }
+				//	 }
 				//	},
 				//	"OWASP": {
-						container(name: 'maven') {
+				//		container(name: 'maven') {
 
 							 stage("CESICAT: Anàlisi seguretat dependency check") {
 			                        //TODO: Opcio d'utilitzar dependencyCheckAnalyzer

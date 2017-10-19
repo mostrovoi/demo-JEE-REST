@@ -114,7 +114,7 @@ clientsTemplate {
 			        	sh("git config --unset credential.helper")
 			        }
 			    } */
-			  
+			   
 			  	//TODO: Externalitzar valors
 				container(name: 'clients') {
 					stage ('Desplegament INT') {

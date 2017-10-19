@@ -60,11 +60,12 @@ clientsTemplate {
 				//	},
 				//	"OWASP": {
 				//		container(name: 'maven') {
-
-							 stage("CESICAT: Anàlisi seguretat dependency check") {
-			                        //TODO: Opcio d'utilitzar dependencyCheckAnalyzer
+					     //TODO: Opcio d'utilitzar dependencyCheckAnalyzer
 			                        //dependencyCheckAnalyzer datadir: '', hintsFile: '', includeCsvReports: false, includeHtmlReports: true, includeJsonReports: false, isAutoupdateDisabled: false, outdir: '', scanpath: '**/viewer-**.war,', skipOnScmChange: false, skipOnUpstreamChange: false, suppressionFile: '', zipExtensions: ''
-			                        try {
+			                        
+
+							  /*stage("CESICAT: Anàlisi seguretat dependency check") {
+			                   try {
 			                            sh "mvn verify -Powasp-dependencycheck,dev"
 			                        }
 			                        finally {
@@ -80,7 +81,7 @@ clientsTemplate {
 									}
 
 							 }
-						}
+						} */
 					//})
 
 			    //TODO: Externalitzar el nom del registre i logica a funcions externes
@@ -138,7 +139,7 @@ clientsTemplate {
 					//TODO: Not sure of the real nature of smoke tests
 					stage ('Smoke Test INT') {
 					 	sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,int -Dserver.url=http://bookstore.dev.matxa.es"
-					    //TODO: Filter out just these reports
+					    //TODO: Machaca los surefire-reports
 					    junit healthScaleFactor: 1.0, testResults: 'target/failsafe-reports/TEST*.xml'	
 					}
 					stage('Acceptance Test INT') {

@@ -40,7 +40,7 @@ clientsTemplate {
 				//parallel(
 				//	"Sonar": {
 			//			container(name: 'maven') {
-							stage ('Anàlisi de codi estàtic') {
+					/*		stage ('Anàlisi de codi estàtic') {
 								withSonarQubeEnv("SonarQubeServer") {
 								    sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL" 
 							    }
@@ -55,7 +55,7 @@ clientsTemplate {
 									else
 										error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
 							   }
-							}		
+							}		*/
 				//	 }
 				//	},
 				//	"OWASP": {
@@ -138,6 +138,8 @@ clientsTemplate {
 					//TODO: Not sure of the real nature of smoke tests
 					stage ('Smoke Test INT') {
 					 	sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,int -Dserver.url=http://bookstore.dev.matxa.es"
+					    //TODO: Filter out just these reports
+					    junit healthScaleFactor: 1.0, testResults: 'target/failsafe-reports/TEST*.xml'	
 					}
 					stage('Acceptance Test INT') {
 					     sh "mvn verify -Dmaven.test.failure.ignore -PintegrationTest,int -Dserver.url=http://bookstore.dev.matxa.es" 
@@ -147,7 +149,7 @@ clientsTemplate {
                                 sh "mvn -Powasp-zap,dev verify"
                             }
                             finally {
-                                archiveArtifacts artifacts: '*/target/zap-reports/*.xml'
+                                //archiveArtifacts artifacts: '*/target/zap-reports/*.xml'
                                 publishHTML(target: [
                                         reportDir            : 'target/zap-reports',
                                         reportFiles          : 'zapReport.html',

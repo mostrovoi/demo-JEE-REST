@@ -19,7 +19,7 @@ clientsTemplate {
 			node('maven-and-docker-and-kubectl') {
 				container(name: 'maven') {
 					stage("Checkout") {
-						//checkout scm
+						checkout scm
 						git 'https://github.com/mostrovoi/demo-canigo.git'
 					}
 					
@@ -168,10 +168,10 @@ clientsTemplate {
 
 				container(name: 'maven') {
 					stage ('Smoke Test PRE') {
-						sh "mvn verify  -Dmaven.test.failure.ignore -PsmokeTest,pre -Dserver.url=http://bookstore.pre.matxa.es"
+						sh "mvn verify -PsmokeTest,pre -Dserver.url=http://bookstore.pre.matxa.es"
 					}
 					stage ('Acceptance Test PRE') { 
-					 	sh "mvn verify -Dmaven.test.failure.ignore  -PintegrationTest,pre -Dserver.url=http://bookstore.pre.matxa.es" 
+					 	sh "mvn verify -PintegrationTest,pre -Dserver.url=http://bookstore.pre.matxa.es" 
 					}
 				} 
 				container(name: 'performance') {
@@ -205,7 +205,7 @@ clientsTemplate {
 					}
 
 					stage ('Smoke Test PRO') {
-						sh "mvn verify -Dmaven.test.failure.ignore -PsmokeTest,pre -Dserver.url=http://bookstore.matxa.es"
+						sh "mvn verify -PsmokeTest,pre -Dserver.url=http://bookstore.matxa.es"
 					}
 				} 
 

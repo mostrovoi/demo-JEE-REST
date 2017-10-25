@@ -31,8 +31,8 @@ clientsTemplate {
 			    }
 				//parallel(
 				//	"Sonar": {
-			//			container(name: 'maven') {
-					/*		stage ('Anàlisi de codi estàtic') {
+					container(name: 'maven') {
+							stage ('Anàlisi de codi estàtic') {
 								withSonarQubeEnv("SonarQubeServer") {
 								    sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL" 
 							    }
@@ -47,8 +47,8 @@ clientsTemplate {
 									else
 										error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
 							   }
-							}		*/
-				//	 }
+							}		
+					 }
 				//	},
 				//	"OWASP": {
 				//		container(name: 'maven') {
@@ -77,6 +77,7 @@ clientsTemplate {
 					//})
 
 			    //TODO: Externalitzar el nom del registre i logica a funcions externes
+				
 				container(name: 'docker') {
 					stage ('Generació imatge docker') {
 						 sh("docker build -t gencat.azurecr.io/demo-canigo:latest -f src/assembly/docker/app/Dockerfile .")

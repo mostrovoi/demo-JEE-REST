@@ -28,10 +28,10 @@ clientsTemplate {
 					    //TODO: Change to publish html
 					    junit healthScaleFactor: 1.0, testResults: 'target/surefire-reports/TEST*.xml'	
 					}
-			    }
+			    //}
 				//parallel(
 				//	"Sonar": {
-					container(name: 'maven') {
+				//	container(name: 'maven') {
 							stage ('Anàlisi de codi estàtic') {
 								withSonarQubeEnv("SonarQubeServer") {
 								    sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL" 
@@ -48,7 +48,7 @@ clientsTemplate {
 										error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
 							   }
 							}		
-					 }
+				//	 }
 				//	},
 				//	"OWASP": {
 				//		container(name: 'maven') {
@@ -56,7 +56,7 @@ clientsTemplate {
 			                        //dependencyCheckAnalyzer datadir: '', hintsFile: '', includeCsvReports: false, includeHtmlReports: true, includeJsonReports: false, isAutoupdateDisabled: false, outdir: '', scanpath: '**/viewer-**.war,', skipOnScmChange: false, skipOnUpstreamChange: false, suppressionFile: '', zipExtensions: ''
 			                        
 
-							  /*stage("CESICAT: Anàlisi seguretat dependency check") {
+							  stage("CESICAT: Anàlisi seguretat dependency check") {
 			                   try {
 			                            sh "mvn verify -Powasp-dependencycheck,dev"
 			                        }
@@ -73,7 +73,7 @@ clientsTemplate {
 									}
 
 							 }
-						} */
+						} 
 					//})
 
 			    //TODO: Externalitzar el nom del registre i logica a funcions externes

@@ -3,9 +3,9 @@
 
 
 clientsTemplate {
-	dockerTemplate(label: 'maven-and-docker-and-kubectl') {
+	dockerTemplate {
 	  performanceTemplate {
-	      mavenTemplate  { 	
+	      mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
 			node('maven-and-docker-and-kubectl') {
 				container(name: 'maven') {
 					stage("Checkout") {

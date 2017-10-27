@@ -17,55 +17,42 @@ clientsTemplate {
 					    //TODO: Change to publish html
 					    junit healthScaleFactor: 1.0, testResults: 'target/surefire-reports/TEST*.xml'	
 					}
-			    //}
-				//parallel(
-				//	"Sonar": {
-				//	container(name: 'maven') {
-							stage ('Anàlisi de codi estàtic') {
-								withSonarQubeEnv("SonarQubeServer") {
-								    sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL" 
-							    }
-							} 
+			   
+					stage ('Anàlisi de codi estàtic') {
+						withSonarQubeEnv("SonarQubeServer") {
+						    sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL" 
+					    }
+					} 
 
-							//TODO: Moure fora del node, no cal un executor assignat
-							stage("Validació de SonarQube Gatekeeper") {
-								timeout(time: 5, unit: 'MINUTES') { 
-									def qG = waitForQualityGate()
-									if(qG.status == 'OK')
-									  echo "SONAR: Codi acompleix els mínims de qualitat. Enhorabona!"
-									else
-										error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
-							   }
-							}		
-				//	 }
-				//	},
-				//	"OWASP": {
-				//		container(name: 'maven') {
-					     //TODO: Opcio d'utilitzar dependencyCheckAnalyzer
-			                        //dependencyCheckAnalyzer datadir: '', hintsFile: '', includeCsvReports: false, includeHtmlReports: true, includeJsonReports: false, isAutoupdateDisabled: false, outdir: '', scanpath: '**/viewer-**.war,', skipOnScmChange: false, skipOnUpstreamChange: false, suppressionFile: '', zipExtensions: ''
-			                        
+					//TODO: Moure fora del node, no cal un executor assignat
+					stage("Validació de SonarQube Gatekeeper") {
+						timeout(time: 5, unit: 'MINUTES') { 
+							def qG = waitForQualityGate()
+							if(qG.status == 'OK')
+							  echo "SONAR: Codi acompleix els mínims de qualitat. Enhorabona!"
+							else
+								error "SONAR: Codi no acompleix els mínims de qualitat : ${qG.status}"
+					   }
+					}		
+		
+				  stage("CESICAT: Anàlisi seguretat dependency check") {
+                   try {
+                            sh "mvn verify -Powasp-dependencycheck,dev"
+                        }
+                        finally {
+                            publishHTML(target: [
+                                    reportDir            : 'target',
+                                    reportFiles          : 'dependency-check-report.html',
+                                    reportName           : 'OWASP Dependency Check Informe',
+                                    keepAll              : true,
+                                    alwaysLinkToLastBuild: true,
+                                    allowMissing         : false
+                            ])
+                            dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
+						}
 
-							  stage("CESICAT: Anàlisi seguretat dependency check") {
-			                   try {
-			                            sh "mvn verify -Powasp-dependencycheck,dev"
-			                        }
-			                        finally {
-			                            publishHTML(target: [
-			                                    reportDir            : 'target',
-			                                    reportFiles          : 'dependency-check-report.html',
-			                                    reportName           : 'OWASP Dependency Check Informe',
-			                                    keepAll              : true,
-			                                    alwaysLinkToLastBuild: true,
-			                                    allowMissing         : false
-			                            ])
-			                            dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
-									}
-
-							 }
-						} 
-					//})
-
-			    //TODO: Externalitzar el nom del registre i logica a funcions externes
+				 }
+			} 
 				
 				container(name: 'docker') {
 					stage ('Generació imatge docker') {
@@ -80,30 +67,6 @@ clientsTemplate {
 					}						   	
 				}
 
-				//TODO: Moure a funcio parametritzable
-			    /*stage ('Generació Tag BUILD') {
-			        //Si el PipeLine ha arribat fins aquí, la versió de codi és prou estable com per mereixer la  generació del tag
-			       def pom = readMavenPom file: 'pom.xml'
-			  	   //Si la versió es SNAPSHOT o ja existeix tirar-la enrera
-			       if(pom == null || pom.version == null || pom.version.contains("SNAPSHOT"))
-			           error "El tag no pot ser buit ni snapshot"
-
-			  	   try {
-			           sh("git tag -a ${pom.version} -m 'Jenkins'")
-			           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JenkinsID', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-			                sh("git config credential.username ${env.GIT_USERNAME}")
-			                sh("git config credential.helper '!echo password=\$GIT_PASSWORD; echo'")
-			                sh("GIT_ASKPASS=true git push origin --tags")
-			           }
-			        }
-			        catch (Exception ex) {
-			        	error "Error generant el tag."
-			        }
-			        finally {
-			        	sh("git config --unset credential.username")
-			        	sh("git config --unset credential.helper")
-			        }
-			    } */
 			   
 			  	//TODO: Externalitzar valors
 				container(name: 'clients') {

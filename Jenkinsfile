@@ -2,10 +2,7 @@
 @Library('github.com/mostrovoi/pipeline-library@master') _
 
 
-clientsTemplate {
-	dockerTemplate {
-	  performanceTemplate {
-	      mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
+demoCanigoTemplate(label: 'maven-and-docker-and-kubectl')  { 	
 			node('maven-and-docker-and-kubectl') {
 				container(name: 'maven') {
 					stage("Checkout") {
@@ -48,7 +45,6 @@ clientsTemplate {
                                     alwaysLinkToLastBuild: true,
                                     allowMissing         : false
                             ])
-                            dependencyCheckPublisher canComputeNew: false, defaultEncoding: '', failedTotalAll: '150', healthy: '', pattern: 'target/dependency-check-report.xml', unHealthy: ''
 						}
 
 				 }
@@ -165,10 +161,7 @@ clientsTemplate {
 				stage("Arxivar artefactes") {
 					archiveArtifacts artifacts: 'target/**/*'
 				 }
-			  }
-	  		}
-	    }
-	}
-}
+	     }
+	 }
 
 

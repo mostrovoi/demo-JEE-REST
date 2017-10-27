@@ -595,7 +595,7 @@
                         </executions>
                         <configuration>
                             <!-- Configuration parameters -->
-                            <zapHost>zap</zapHost> 
+                            <zapHost>zap</zapHost>
                             <zapPort>8080</zapPort>
                             <!-- <shouldRunWithDocker>true</shouldRunWithDocker>
                               <zapOptions>-daemon -config api.disablekey=true -config api.incerrordetails=true -config proxy.ip=0.0.0.0 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true</zapOptions> -->

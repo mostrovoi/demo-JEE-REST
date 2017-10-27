@@ -3,14 +3,13 @@
 
 
 clientsTemplate {
-	dockerTemplate {
+	dockerTemplate(label: 'maven-and-docker-and-kubectl') {
 	  performanceTemplate {
-	      mavenTemplate(label: 'maven-and-docker-and-kubectl')  { 	
+	      mavenTemplate  { 	
 			node('maven-and-docker-and-kubectl') {
 				container(name: 'maven') {
 					stage("Checkout") {
 						checkout scm
-						//git 'https://github.com/mostrovoi/demo-canigo.git'
 					}
 					
 					stage("Build") {

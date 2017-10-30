@@ -1,4 +1,4 @@
-FROM gencatcloud/java:7
+FROM gencatcloud/java:8
 
 VOLUME /tmp
 

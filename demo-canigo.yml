@@ -1,18 +1,56 @@
 ---
+resource_types:
+- name: sonar-runner
+  type: docker-image
+  source:
+    repository: cathive/concourse-sonarqube-resource
+    tag: latest
+
 resources:
 - name: source-code
   type: git
   source: 
     uri: https://github.com/mostrovoi/demo-canigo.git
     branch: master
+- name: sonar-analysis
+  type: sonar-runner
+  source:
+    host_url: https://sonarqube.devops.matxa.es
+    login: ((SONARQUBE_AUTH_TOKEN))
+    project_key: com.demo.canigo 
+    branch: master
+
 
 jobs:
-- name: job-demo-canigo
-  public: true
-  serial: true
+- name: build-and-analyse-demo-canigo
   plan: 
-   - get: source-code
-     trigger: true
-   - task: package
-     privileged: true
-     file: source-code/tasks/package.yml
+  - get: source-code
+    trigger: true
+  - task: unit
+    privileged: true
+    file: source-code/tasks/package.yml
+  - put: sonar-runner
+    params:
+      project_path: source-code
+- name: sonarqualitygate
+  plan: 
+  - get: sonar-runner
+    passed: 
+    - build-and-analyse-demo-canigo
+    trigger: true
+    - task: break-build
+      config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: node
+          tag: '8.4.0'
+        inputs:
+        - name: sonar-runner
+        run:
+          path: node
+          args:
+          - -e
+          - "const projectStatus = require('./qualitygate_project_status.json'); if (projectStatus.status !== 'OK') { console.error('Quality gate goals missed. :-('); process.exit(1); }"
+          dir: sonar-runner

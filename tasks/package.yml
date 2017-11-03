@@ -1,0 +1,17 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: maven
+    tag: latest
+
+inputs:
+  - name: source-code
+
+run:
+  path: "source-code/mvn"
+  args: ["-f", "source-code/pom.xml", "verify"]
+
+params:
+  MAVEN_BASEDIR: source-code

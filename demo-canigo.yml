@@ -20,37 +20,22 @@ resources:
     project_key: com.demo.canigo 
     branch: master
 
-
 jobs:
 - name: build-and-analyse-demo-canigo
   plan: 
   - get: source-code
     trigger: true
-  - task: unit
+  - task: unit-tests
     privileged: true
     file: source-code/tasks/package.yml
-  - put: sonar-runner
+  - put: sonar-analysis
     params:
       project_path: source-code
 - name: sonarqualitygate
   plan: 
-  - get: sonar-runner
+  - get: sonar-analysis
     passed: 
     - build-and-analyse-demo-canigo
     trigger: true
-    - task: break-build
-      config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: node
-          tag: '8.4.0'
-        inputs:
-        - name: sonar-runner
-        run:
-          path: node
-          args:
-          - -e
-          - "const projectStatus = require('./qualitygate_project_status.json'); if (projectStatus.status !== 'OK') { console.error('Quality gate goals missed. :-('); process.exit(1); }"
-          dir: sonar-runner
+  - task: break-build
+    file: source-code/task/break-build.yml

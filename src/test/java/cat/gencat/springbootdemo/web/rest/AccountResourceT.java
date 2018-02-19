@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest
-public class AccountResourceTest {
+public class AccountResourceT {
 
     @Inject
     private UserRepository userRepository;

@@ -39,18 +39,17 @@ public class AppUISmoke extends AbstractBaseUI {
     private String appURL;
 
 
-    @BeforeClass
+
     public static void setUp() throws Exception{
         driver = new RemoteWebDriver(getRemoteUrl(), getDesiredCapabilities()); 
     }
 
-    @Test
+
     public void verifySpringBootDemoTittle() {
         driver.get(appURL);
         assertThat(driver.getTitle()).isEqualTo("springbootdemo");
     }
 
-    @AfterClass
     public static void tearDown(){
         driver.quit();
     }

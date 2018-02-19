@@ -1,8 +1,8 @@
 package cat.gencat.springbootdemo.web.rest;
 
 import cat.gencat.springbootdemo.Application;
-import cat.gencat.springbootdemo.domain.Author;
-import cat.gencat.springbootdemo.repository.AuthorRepository;
+import cat.gencat.springbootdemo.domain.Book;
+import cat.gencat.springbootdemo.repository.BookRepository;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,23 +29,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 /**
- * Test class for the AuthorResource REST controller.
+ * Test class for the BookResource REST controller.
  *
- * @see AuthorResource
+ * @see BookResource
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest
-public class AuthorResourceTest {
+public class BookResourceT {
 
     private static final String DEFAULT_NOM = "SAMPLE_TEXT";
     private static final String UPDATED_NOM = "UPDATED_TEXT";
 
     @Inject
-    private AuthorRepository authorRepository;
+    private BookRepository bookRepository;
 
     @Inject
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -53,120 +52,120 @@ public class AuthorResourceTest {
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    private MockMvc restAuthorMockMvc;
+    private MockMvc restBookMockMvc;
 
-    private Author author;
+    private Book book;
 
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        AuthorResource authorResource = new AuthorResource();
-        ReflectionTestUtils.setField(authorResource, "authorRepository", authorRepository);
-        this.restAuthorMockMvc = MockMvcBuilders.standaloneSetup(authorResource)
+        BookResource bookResource = new BookResource();
+        ReflectionTestUtils.setField(bookResource, "bookRepository", bookRepository);
+        this.restBookMockMvc = MockMvcBuilders.standaloneSetup(bookResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
     @Before
     public void initTest() {
-        author = new Author();
-        author.setNom(DEFAULT_NOM);
+        book = new Book();
+        book.setNom(DEFAULT_NOM);
     }
 
     @Test
     @Transactional
-    public void createAuthor() throws Exception {
-        int databaseSizeBeforeCreate = authorRepository.findAll().size();
+    public void createBook() throws Exception {
+        int databaseSizeBeforeCreate = bookRepository.findAll().size();
 
-        // Create the Author
+        // Create the Book
 
-        restAuthorMockMvc.perform(post("/api/authors")
+        restBookMockMvc.perform(post("/api/books")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(author)))
+                .content(TestUtil.convertObjectToJsonBytes(book)))
                 .andExpect(status().isCreated());
 
-        // Validate the Author in the database
-        List<Author> authors = authorRepository.findAll();
-        assertThat(authors).hasSize(databaseSizeBeforeCreate + 1);
-        Author testAuthor = authors.get(authors.size() - 1);
-        assertThat(testAuthor.getNom()).isEqualTo(DEFAULT_NOM);
+        // Validate the Book in the database
+        List<Book> books = bookRepository.findAll();
+        assertThat(books).hasSize(databaseSizeBeforeCreate + 1);
+        Book testBook = books.get(books.size() - 1);
+        assertThat(testBook.getNom()).isEqualTo(DEFAULT_NOM);
     }
 
     @Test
     @Transactional
-    public void getAllAuthors() throws Exception {
+    public void getAllBooks() throws Exception {
         // Initialize the database
-        authorRepository.saveAndFlush(author);
+        bookRepository.saveAndFlush(book);
 
-        // Get all the authors
-        restAuthorMockMvc.perform(get("/api/authors"))
+        // Get all the books
+        restBookMockMvc.perform(get("/api/books"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(author.getId().intValue())))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(book.getId().intValue())))
                 .andExpect(jsonPath("$.[*].nom").value(hasItem(DEFAULT_NOM.toString())));
     }
 
     @Test
     @Transactional
-    public void getAuthor() throws Exception {
+    public void getBook() throws Exception {
         // Initialize the database
-        authorRepository.saveAndFlush(author);
+        bookRepository.saveAndFlush(book);
 
-        // Get the author
-        restAuthorMockMvc.perform(get("/api/authors/{id}", author.getId()))
+        // Get the book
+        restBookMockMvc.perform(get("/api/books/{id}", book.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(author.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(book.getId().intValue()))
             .andExpect(jsonPath("$.nom").value(DEFAULT_NOM.toString()));
     }
 
     @Test
     @Transactional
-    public void getNonExistingAuthor() throws Exception {
-        // Get the author
-        restAuthorMockMvc.perform(get("/api/authors/{id}", Long.MAX_VALUE))
+    public void getNonExistingBook() throws Exception {
+        // Get the book
+        restBookMockMvc.perform(get("/api/books/{id}", Long.MAX_VALUE))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateAuthor() throws Exception {
+    public void updateBook() throws Exception {
         // Initialize the database
-        authorRepository.saveAndFlush(author);
+        bookRepository.saveAndFlush(book);
 
-		int databaseSizeBeforeUpdate = authorRepository.findAll().size();
+		int databaseSizeBeforeUpdate = bookRepository.findAll().size();
 
-        // Update the author
-        author.setNom(UPDATED_NOM);
+        // Update the book
+        book.setNom(UPDATED_NOM);
         
 
-        restAuthorMockMvc.perform(put("/api/authors")
+        restBookMockMvc.perform(put("/api/books")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(author)))
+                .content(TestUtil.convertObjectToJsonBytes(book)))
                 .andExpect(status().isOk());
 
-        // Validate the Author in the database
-        List<Author> authors = authorRepository.findAll();
-        assertThat(authors).hasSize(databaseSizeBeforeUpdate);
-        Author testAuthor = authors.get(authors.size() - 1);
-        assertThat(testAuthor.getNom()).isEqualTo(UPDATED_NOM);
+        // Validate the Book in the database
+        List<Book> books = bookRepository.findAll();
+        assertThat(books).hasSize(databaseSizeBeforeUpdate);
+        Book testBook = books.get(books.size() - 1);
+        assertThat(testBook.getNom()).isEqualTo(UPDATED_NOM);
     }
 
     @Test
     @Transactional
-    public void deleteAuthor() throws Exception {
+    public void deleteBook() throws Exception {
         // Initialize the database
-        authorRepository.saveAndFlush(author);
+        bookRepository.saveAndFlush(book);
 
-		int databaseSizeBeforeDelete = authorRepository.findAll().size();
+		int databaseSizeBeforeDelete = bookRepository.findAll().size();
 
-        // Get the author
-        restAuthorMockMvc.perform(delete("/api/authors/{id}", author.getId())
+        // Get the book
+        restBookMockMvc.perform(delete("/api/books/{id}", book.getId())
                 .accept(TestUtil.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<Author> authors = authorRepository.findAll();
-        assertThat(authors).hasSize(databaseSizeBeforeDelete - 1);
+        List<Book> books = bookRepository.findAll();
+        assertThat(books).hasSize(databaseSizeBeforeDelete - 1);
     }
 }

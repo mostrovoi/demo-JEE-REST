@@ -42,7 +42,6 @@ public class AutoUIIT extends AbstractBaseUI {
         
     }
 
-    @Test
     public void verifyUrlRegisterTittle() {
 
         wait = new WebDriverWait(driver, 15);
@@ -54,7 +53,6 @@ public class AutoUIIT extends AbstractBaseUI {
         assertThat(driver.getCurrentUrl()).isEqualTo(appURL+ "/#/register");
     }
 
-    @Test
     public void verifyTextLanguage() {
 
         wait = new WebDriverWait(driver, 25);
